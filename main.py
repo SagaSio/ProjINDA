@@ -4,7 +4,7 @@ import time
 import random
 pygame.font.init()
 
-WIDTH, HEIGHT = 750, 750
+WIDTH, HEIGHT = 1280, 720
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Load images
