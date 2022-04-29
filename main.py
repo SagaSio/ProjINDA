@@ -24,24 +24,44 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
 
+
+# An abstract class. Won't be used in itself but inherited from!
+class Ship:
+    def __init__(self, x, y):
+        # The ship stores its own position
+        self.x = x
+        self.y = y 
+        # Allows us to draw the ship. These will be defined as we create the individual ships
+        self.ship_img = None
+        self.laser_img = None
+        self.lasers = []
+        self.bullet_Pause = 0
+
+    # Adding methods
+
+    # Drawing method. Draws on the surface "WINDOW"
+    def draw(self, WINDOW):
+        pygame.draw.circle(WINDOW, (255, 0, 0), (self.x, self.y), 30)
+
 def main():
     run = True
     # Frames per second
     FPS = 60 
+
+    # Velocty for player
+    player_vel = 5
+
+    # Creating a ship at bottom of the screen
+    ship = Ship(300, 650)
+
     clock = pygame.time.Clock()
-    # Start on level 1 with 5 lives
-    #level = 1
-    #lives = 5
-    # Creates a font to use
-    #main_font = pygame.font.SysFont("comicsans", 50)
 
     # A function inside of the function
     def redraw_window():
         WINDOW.blit(BG, (0,0))
 
-        # Text
-        # The f enables us to put the value of level in the brackets
-        #lives_label = main_font.render(f"Level: {level}")
+        # The ship will call its own draw method
+        ship.draw(WINDOW)
 
         pygame.display.update()
 
@@ -52,5 +72,18 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+        # This is not positioned in the for loop above so that 
+        # multiple keys can be pressed at the same time
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_a]: #left
+            ship.x -= player_vel 
+        if keys[pygame.K_d]: #right
+            ship.x += player_vel
+        if keys[pygame.K_w]: #up
+            ship.y -= player_vel
+        if keys[pygame.K_s]: #down
+            ship.y += player_vel
 
 main()
