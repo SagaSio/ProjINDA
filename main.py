@@ -37,11 +37,17 @@ class Ship:
         self.lasers = []
         self.bullet_Pause = 0
 
+
     # Adding methods
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):
         pygame.draw.circle(WINDOW, (255, 0, 0), (self.x, self.y), 30)
+
+
+# To be used later
+# Class that inherits from Ship
+# class Player(Ship)
 
 def main():
     run = True
@@ -76,14 +82,14 @@ def main():
         # This is not positioned in the for loop above so that 
         # multiple keys can be pressed at the same time
         keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_a]: #left
+        # Also makes sure that there are boundaries
+        if keys[pygame.K_a] and ship.x - player_vel > 30: #left
             ship.x -= player_vel 
-        if keys[pygame.K_d]: #right
+        if keys[pygame.K_d] and ship.x - player_vel + 30 < WIDTH: #right
             ship.x += player_vel
-        if keys[pygame.K_w]: #up
+        if keys[pygame.K_w] and ship.y - player_vel > 30: #up
             ship.y -= player_vel
-        if keys[pygame.K_s]: #down
+        if keys[pygame.K_s] and ship.y + player_vel + 30 < HEIGHT: #down
             ship.y += player_vel
 
 main()
