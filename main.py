@@ -1,3 +1,6 @@
+from math import sin
+from math import pi
+from math import cos
 import pygame
 import os
 import time
@@ -31,18 +34,20 @@ class Ship:
         # The ship stores its own position
         self.x = x
         self.y = y 
+        self.rotation = pi/2
         # Allows us to draw the ship. These will be defined as we create the individual ships
         self.ship_img = None
         self.laser_img = None
         self.lasers = []
         self.bullet_Pause = 0
 
-
     # Adding methods
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):
-        pygame.draw.circle(WINDOW, (255, 0, 0), (self.x, self.y), 30)
+        radius = 30
+        pygame.draw.circle(WINDOW, (255, 0, 0), (self.x, self.y), radius)
+        pygame.draw.circle(WINDOW, (255, 255, 255), (int(self.x+radius*cos(self.rotation)), int(self.y+radius*sin(self.rotation))), 5)
 
 
 # To be used later
@@ -84,12 +89,23 @@ def main():
         keys = pygame.key.get_pressed()
         # Also makes sure that there are boundaries
         if keys[pygame.K_a] and ship.x - player_vel > 30: #left
-            ship.x -= player_vel 
+            ship.x -= player_vel
+            ship.rotation = pi
+            
         if keys[pygame.K_d] and ship.x - player_vel + 30 < WIDTH: #right
             ship.x += player_vel
+            ship.rotation = 0
+
         if keys[pygame.K_w] and ship.y - player_vel > 30: #up
             ship.y -= player_vel
+            ship.rotation = 3*pi/2
+
         if keys[pygame.K_s] and ship.y + player_vel + 30 < HEIGHT: #down
             ship.y += player_vel
+            ship.rotation = pi/2
+
+        if keys[pygame.K_SPACE]:
+            pass
+ 
 
 main()
