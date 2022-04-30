@@ -1,6 +1,7 @@
 from math import sin
 from math import pi
 from math import cos
+from numpy import rot90
 import pygame
 import os
 import time
@@ -34,11 +35,12 @@ class Bullet:
         #Fix x and y after direction. Fixed velocity
         self.x = x
         self.y = y
-        self.v = 10
+        self.v = 20
         self.rotation = 0
         self.direction = direction
     
     def draw(self, WINDOW):
+        #Update x and y position of bullet with direction and velocity
         self.x = int(self.x + cos(self.direction)*self.v)
         self.y = int(self.y + sin(self.direction)*self.v)
         pygame.draw.circle(WINDOW, (255, 255, 255), (self.x, self.y), 10)
@@ -51,6 +53,8 @@ class Ship:
         self.y = y
         self.radius = 30
         self.rotation = pi/2
+        self.xv = 0
+        self.yv = 0
         # Allows us to draw the ship. These will be defined as we create the individual ships
         self.ship_img = None
         self.laser_img = None
@@ -61,6 +65,22 @@ class Ship:
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):
+        # update velocity
+        if abs(self.xv)<0.2:
+            self.xv = 0
+        elif self.xv>0:
+            self.xv = self.xv - 0.1
+        else:
+            self.xv = self.xv + 0.1
+        if abs(self.yv)<0.2:
+            self.yv = 0
+        elif self.yv>0:
+            self.yv = self.yv - 0.1
+        else:
+            self.yv = self.yv + 0.1
+        #update x and y values by velocity
+        self.x = int(self.x + self.xv)
+        self.y = int(self.y + self.yv)
         pygame.draw.circle(WINDOW, (255, 0, 0), (self.x, self.y), self.radius)
         pygame.draw.circle(WINDOW, (255, 255, 255), (int(self.x+self.radius*cos(self.rotation)), int(self.y+self.radius*sin(self.rotation))), 5)
 
@@ -74,6 +94,10 @@ def main():
     # Frames per second
     FPS = 60 
 
+    #Settings
+    maxv = 5.0 
+    acceleration = 0.5      
+    turnRate = pi/30
     # Velocty for player
     player_vel = 5
 
@@ -111,30 +135,184 @@ def main():
         # multiple keys can be pressed at the same time
         keys = pygame.key.get_pressed()
         # Also makes sure that there are boundaries
-        if keys[pygame.K_a] and ship.x - player_vel > 30: #left
-            ship.x -= player_vel
-            ship.rotation = pi
+        if keys[pygame.K_a] and not keys[pygame.K_w] and not keys[pygame.K_s]: #left exlusive
+            # change in speed
+            if ship.xv>-maxv:
+                ship.xv = ship.xv - acceleration
+            else:
+                ship.xv = -maxv
+            # periodic switch if rotational value is out of range.
+            if ship.rotation > 2*pi:
+                ship.rotation = ship.rotation - 2*pi
+            elif ship.rotation < 0:
+                ship.rotation = ship.rotation + 2*pi
+            # Rotation towards pi 
+            elif abs(ship.rotation - pi)<0.01:
+                ship.rotation = pi
+            elif ship.rotation>pi and ship.rotation <= 2*pi: 
+                ship.rotation = ship.rotation - turnRate
+            else: 
+                ship.rotation = ship.rotation + turnRate
+
+        if keys[pygame.K_a] and keys[pygame.K_w]: #left and up
+            # change in speed
+            if ship.xv>-maxv:
+                ship.xv = ship.xv - acceleration
+            else:
+                ship.xv = -maxv
+            if ship.yv>-maxv:
+                ship.yv = ship.yv - acceleration
+            # periodic switch if rotational value is out of range.
+            if ship.rotation > 2*pi:
+                ship.rotation = ship.rotation - 2*pi
+            elif ship.rotation < 0:
+                ship.rotation = ship.rotation + 2*pi
+            # Rotation towards 5*pi/4
+            elif abs(ship.rotation - 5*pi/4)<0.01:
+                ship.rotation = 5*pi/4
+            elif ship.rotation>5*pi/4 and ship.rotation <= 2*pi or ship.rotation<pi/4 and ship.rotation>0: 
+                ship.rotation = ship.rotation - turnRate
+            else: 
+                ship.rotation = ship.rotation + turnRate
+
+        if keys[pygame.K_w] and not keys[pygame.K_a] and not keys[pygame.K_d] : #up exlusive
+            #change in speed
+            if ship.yv>-maxv:
+                ship.yv = ship.yv - acceleration
+            else:
+                ship.yv = -maxv
+            # periodic switch if rotational value is out of range.
+            if ship.rotation > 2*pi:
+                ship.rotation = ship.rotation - 2*pi
+            elif ship.rotation < 0:
+                ship.rotation = ship.rotation + 2*pi
+            # change in rotation toward 3*pi/2
+            elif abs(ship.rotation-3*pi/2)<0.01:
+                ship.rotation = 3*pi/2
+                
+            elif ship.rotation>=pi/2 and ship.rotation<3*pi/2: 
+                ship.rotation = ship.rotation + turnRate
+            elif ship.rotation<pi/2 and ship.rotation>=0 or ship.rotation<=2*pi and ship.rotation>3*pi/2:
+                ship.rotation = ship.rotation - turnRate
+            else: 
+                print("error up key")
+
+        if keys[pygame.K_d] and keys[pygame.K_w]: #right and up
+            # change in speed
+            if ship.xv<maxv:
+                ship.xv = ship.xv + acceleration
+            else:
+                ship.xv = maxv
+            if ship.yv>-maxv:
+                ship.yv = ship.yv - acceleration
+            else:
+                ship.yv = -maxv
+            # periodic switch if rotational value is out of range.
+            if ship.rotation > 2*pi:
+                ship.rotation =ship.rotation - 2*pi
+            elif ship.rotation < 0:
+                ship.rotation = ship.rotation + 2*pi
+            # change in rotation toward 0
+            elif abs(ship.rotation-7*pi/4)<0.01:
+                ship.rotation = 7*pi/4
+                
+            elif ship.rotation<3*pi/4 and ship.rotation>=0 or ship.rotation>7*pi/4 and ship.rotation<=2*pi: 
+                ship.rotation = ship.rotation - turnRate
+            else: 
+                ship.rotation = ship.rotation + turnRate
+
+        if keys[pygame.K_d] and not keys[pygame.K_w] and not keys[pygame.K_s]: #right exlusive
+            # change in speed
+            if ship.xv<maxv:
+                ship.xv = ship.xv + acceleration
+            else:
+                ship.xv = maxv
+            # periodic switch if rotational value is out of range.
+            if ship.rotation > 2*pi:
+                ship.rotation =ship.rotation - 2*pi
+            elif ship.rotation < 0:
+                ship.rotation = ship.rotation + 2*pi
+            # change in rotation toward 0
+            elif abs(ship.rotation)<0.01 or abs(ship.rotation-2*pi)<0.01:
+                ship.rotation = 0            
+            elif ship.rotation>pi and ship.rotation < 2*pi: 
+                ship.rotation = ship.rotation + turnRate
+            else: 
+                ship.rotation = ship.rotation - turnRate
+
+        if keys[pygame.K_d] and keys[pygame.K_s]: #right and down
+            # change in speed
+            if ship.xv<maxv:
+                ship.xv = ship.xv + acceleration
+            else:
+                ship.xv = maxv
+            if ship.yv<maxv:
+                ship.yv = ship.yv + acceleration
+            else:
+                ship.yv = maxv
+            # periodic switch if rotational value is out of range.
+            if ship.rotation > 2*pi:
+                ship.rotation =ship.rotation - 2*pi
+            elif ship.rotation < 0:
+                ship.rotation = ship.rotation + 2*pi
+            # change in rotation toward pi/4
+            elif abs(ship.rotation-pi/4)<0.01:
+                ship.rotation = pi/4        
+            elif ship.rotation>pi/4 and ship.rotation <= 5*pi/4: 
+                ship.rotation = ship.rotation - turnRate
+            else: 
+                ship.rotation = ship.rotation + turnRate
+        if keys[pygame.K_s] and not keys[pygame.K_a] and not keys[pygame.K_d]: #down
+            # change in speed
+            if ship.yv<maxv:
+                ship.yv = ship.yv + acceleration
+            else:
+                ship.yv = maxv
+            # periodic switch if rotational value is out of range.
+            if ship.rotation > 2*pi:
+                ship.rotation = ship.rotation - 2*pi
+            elif ship.rotation < 0:
+                ship.rotation = ship.rotation + 2*pi
+            # change in rotation toward pi/2
+            elif abs(ship.rotation-pi/2)<0.01:
+                ship.rotation = pi/2
+                
+            elif ship.rotation>=0 and ship.rotation<pi/2 or ship.rotation>=3*pi/2 and ship.rotation<pi*2: 
+                ship.rotation = ship.rotation + turnRate
+            elif ship.rotation>pi/2 and ship.rotation<=3*pi/2:
+                ship.rotation = ship.rotation - turnRate
+            else: 
+                print("error down key")
             
-        if keys[pygame.K_d] and ship.x - player_vel + 30 < WIDTH: #right
-            ship.x += player_vel
-            ship.rotation = 0
+        if keys[pygame.K_a] and keys[pygame.K_s]: #left and down
+            # change in speed
+            if ship.xv>-maxv:
+                ship.xv = ship.xv - acceleration
+            else:
+                ship.xv = -maxv
+            if ship.yv<maxv:
+                ship.yv = ship.yv + acceleration
+            # periodic switch if rotational value is out of range.
+            if ship.rotation > 2*pi:
+                ship.rotation = ship.rotation - 2*pi
+            elif ship.rotation < 0:
+                ship.rotation = ship.rotation + 2*pi
+            # Rotation towards 3*pi/4
+            elif abs(ship.rotation - 3*pi/4)<0.01:
+                ship.rotation = 3*pi/4
+            elif ship.rotation>3*pi/4 and ship.rotation < 7*pi/4: 
+                ship.rotation = ship.rotation - turnRate
+            elif ship.rotation>=0 and ship.rotation<3*pi/4 or ship.rotation>=7*pi/8 and ship.rotation<=2*pi:
+                ship.rotation = ship.rotation + turnRate      
 
-        if keys[pygame.K_w] and ship.y - player_vel > 30: #up
-            ship.y -= player_vel
-            ship.rotation = 3*pi/2
 
-        if keys[pygame.K_s] and ship.y + player_vel + 30 < HEIGHT: #down
-            ship.y += player_vel
-            ship.rotation = pi/2
-
-        if keys[pygame.K_SPACE]:
+        if  keys[pygame.K_SPACE]:
             direction = ship.rotation
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
             bulletlist.append(Bullet(xb, yb, direction))
             numBullets = numBullets + 1
-            print(numBullets)
-            print(len(bulletlist))
+            print("Active bullets:" + str(len(bulletlist)))
  
 
 main()
