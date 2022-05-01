@@ -36,19 +36,22 @@ class Bullet:
         self.x = x
         self.y = y
         self.v = 20
-        self.rotation = 0
         self.direction = direction
-    
+        self.xv = cos(self.direction)*self.v
+        self.yv = sin(self.direction)*self.v
+        self.rotation = 0
+
+
     def draw(self, WINDOW):
         #Update x and y position of bullet with direction and velocity
-        self.x = int(self.x + cos(self.direction)*self.v)
-        self.y = int(self.y + sin(self.direction)*self.v)
+        self.x = int(self.x + self.xv)
+        self.y = int(self.y + self.yv)
         pygame.draw.circle(WINDOW, (255, 255, 255), (self.x, self.y), 10)
    
 # An abstract class. Won't be used in itself but inherited from!
 class Ship:
     def __init__(self, x, y):
-        # The ship stores its own position
+        # The ship stores its own position, velocity and rotation.
         self.x = x
         self.y = y
         self.radius = 30
@@ -65,19 +68,21 @@ class Ship:
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):
+        # Rate of slowdown for each frame
+        acceleration = 0.1
         # update velocity
-        if abs(self.xv)<0.2:
+        if abs(self.xv)<acceleration:
             self.xv = 0
         elif self.xv>0:
-            self.xv = self.xv - 0.1
+            self.xv = self.xv - acceleration
         else:
-            self.xv = self.xv + 0.1
-        if abs(self.yv)<0.2:
+            self.xv = self.xv + acceleration
+        if abs(self.yv)<acceleration:
             self.yv = 0
         elif self.yv>0:
-            self.yv = self.yv - 0.1
+            self.yv = self.yv - acceleration
         else:
-            self.yv = self.yv + 0.1
+            self.yv = self.yv + acceleration
         #update x and y values by velocity
         self.x = int(self.x + self.xv)
         self.y = int(self.y + self.yv)
@@ -95,8 +100,8 @@ def main():
     FPS = 60 
 
     #Settings
-    maxv = 5.0 
-    acceleration = 0.5      
+    maxv = 10.0 
+    acceleration = 0.5  
     turnRate = pi/30
     # Velocty for player
     player_vel = 5
@@ -117,7 +122,7 @@ def main():
         ship.draw(WINDOW)
         #Draw all bullets on screen
         for i in bulletlist:
-            if abs(i.x) < 2000 and abs(i.y) < 2000:
+            if abs(i.x-ship.x) < 3000 and abs(i.y-ship.y) < 3000:
                 i.draw(WINDOW)
             else:
                 bulletlist.remove(i)
@@ -134,7 +139,9 @@ def main():
         # This is not positioned in the for loop above so that 
         # multiple keys can be pressed at the same time
         keys = pygame.key.get_pressed()
-        # Also makes sure that there are boundaries
+
+        # List of available key presses:
+        #  WASD, 1, SPACE, RETURN
         if keys[pygame.K_a] and not keys[pygame.K_w] and not keys[pygame.K_s]: #left exlusive
             # change in speed
             if ship.xv>-maxv:
@@ -313,6 +320,13 @@ def main():
             bulletlist.append(Bullet(xb, yb, direction))
             numBullets = numBullets + 1
             print("Active bullets:" + str(len(bulletlist)))
+        
+        if keys[pygame.K_RETURN]:
+            ship.x = 500
+            ship.y = 500
+
+        if keys[pygame.K_1]:
+            print("X:" + str(ship.x) + " Y:" +str(ship.y))
  
 
 main()
