@@ -3,13 +3,13 @@ from math import sin
 from math import pi
 import pygame
 
-
+## TODO: Expand class to be usable by both player and enemies. Collision should be exclusive, either enemy or player.
 class Bullet:
-    def __init__(self, x, y, direction):
-        #Fix x and y after direction. Fixed velocity
+    def __init__(self, x, y, v, direction):
+        #Fix x and y after direction, velocity
         self.x = x
         self.y = y
-        self.v = 20
+        self.v = v
         self.direction = direction
         self.xv = cos(self.direction)*self.v
         self.yv = sin(self.direction)*self.v

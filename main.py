@@ -51,6 +51,7 @@ def main():
     acceleration = 0.5 
     turnRate = pi/48
     lockTurn = False
+    bulletvelocity = 25
 
 
     # List for all player bullets
@@ -277,14 +278,14 @@ def main():
             direction = ship.rotation
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
-            bulletlist.append(Bullet(xb, yb, direction))
+            bulletlist.append(Bullet(xb, yb, bulletvelocity, direction))
             numBullets = numBullets + 1
             print("Active bullets:" + str(len(bulletlist)))
         
         # Resets player position
         if keys[pygame.K_RETURN]:
-            ship.x = 500
-            ship.y = 500
+            ship.x = WIDTH/2
+            ship.y = HEIGHT/2
         # Prints player position
         if keys[pygame.K_1]:
             print("X:" + str(ship.x) + " Y:" +str(ship.y))
