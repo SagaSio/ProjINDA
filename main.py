@@ -1,10 +1,8 @@
-from cmath import sqrt
 from dataclasses import dataclass
 from math import sin
 from math import pi
 from math import cos
 import math
-from numpy import rot90
 import pygame
 import os
 import time
@@ -59,7 +57,7 @@ def main():
     numBullets = 0
     bulletlist = list()
     # Creating a ship at bottom of the screen
-    ship = Ship(300, 650)
+    ship = Ship(WIDTH/2, HEIGHT/2)
 
     clock = pygame.time.Clock()
 
