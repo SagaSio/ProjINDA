@@ -53,11 +53,11 @@ def main():
     lockTurn = False
     bulletvelocity = 25
 
-
     # List for all player bullets
     numBullets = 0
     bulletlist = list()
-    # Creating a ship at bottom of the screen
+
+    # Creating a ship at middle of the screen
     ship = Ship(WIDTH/2, HEIGHT/2)
 
     clock = pygame.time.Clock()
@@ -75,6 +75,8 @@ def main():
             else:
                 bulletlist.remove(i)
         pygame.display.update()
+
+        #Draw other collidable objects in a loop here. Enemies, asteroids etc. 
 
     while run:
         clock.tick(FPS)
@@ -118,6 +120,8 @@ def main():
                 ship.xv = -maxv
             if ship.yv>-maxv:
                 ship.yv = ship.yv - acceleration*dAngle
+            else: 
+                ship.yv = -maxv
             if not lockTurn:
                 # periodic switch if rotational value is out of range.
                 if ship.rotation > 2*pi:
