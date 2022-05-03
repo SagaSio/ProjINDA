@@ -12,21 +12,18 @@ from Ship import *
 pygame.font.init()
 
 WIDTH, HEIGHT = 1280, 720
+
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+
 
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
-GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green_small.png"))
-BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue_small.png"))
 
 # Player player
 YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_yellow.png"))
 
 # Lasers
 RED_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_red.png"))
-GREEN_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_green.png"))
-BLUE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
-YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"))
 
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
@@ -69,7 +66,7 @@ def main():
         WINDOW.blit(BG, (0,0))
 
         # printing text
-        num_bullets_label = main_font.render(f"Bullets: {num_bullets}", 1, (255, 255, 255))
+        num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         WINDOW.blit(num_bullets_label, (20,20))
 
 
@@ -319,5 +316,28 @@ def main():
                 ship.yv = ship.yv * 0.98
 
 
+# Creates the home screen
 
-main()
+def home():
+    home_font = pygame.font.SysFont("righteous", 60)
+    run = True
+    while run:
+        WINDOW.blit(BG, (0,0))
+        home_text = home_font.render("PRESS THE MOUSE TO BEGIN", 1, (255, 255, 255))
+        WINDOW.blit(home_text, (WIDTH/2 - home_text.get_width()/2, 350))
+
+        home_text2 = home_font.render("---SPACE INVADERS---", 1, (255, 255, 255))
+        WINDOW.blit(home_text2, (WIDTH/2 - home_text2.get_width()/2, 280))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                main()
+            
+    pygame.quit()
+
+
+home()
