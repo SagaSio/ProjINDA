@@ -45,6 +45,8 @@ def main():
     dAngle = 1/math.sqrt(2)
     # Frames per second
     FPS = 60 
+    num_bullets = 0
+    main_font = pygame.font.SysFont("righteous", 30)
 
     # Player Settings
     maxv = 10.0 
@@ -65,6 +67,11 @@ def main():
     # A function inside of the function
     def redraw_window():
         WINDOW.blit(BG, (0,0))
+
+        # printing text
+        num_bullets_label = main_font.render(f"Bullets: {num_bullets}", 1, (255, 255, 255))
+        WINDOW.blit(num_bullets_label, (20,20))
+
 
         # The ship will call its own draw method
         ship.draw(WINDOW)
@@ -284,6 +291,7 @@ def main():
             yb = ship.y + ship.radius*sin(direction)
             bulletlist.append(Bullet(xb, yb, bulletvelocity, direction))
             numBullets = numBullets + 1
+            num_bullets += 1
             print("Active bullets:" + str(len(bulletlist)))
         
         # Resets player position
