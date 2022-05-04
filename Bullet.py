@@ -20,5 +20,5 @@ class Bullet:
         #Update x and y position of bullet with direction and velocity
         self.x = int(self.x + self.xv)
         self.y = int(self.y + self.yv)
-        pygame.draw.circle(WINDOW, (255, 255, 255), (self.x, self.y), 10)
+        pygame.draw.circle(WINDOW, (255, 255, 255), (self.x, self.y), 5, 2)
    

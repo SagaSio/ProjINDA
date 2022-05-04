@@ -16,14 +16,9 @@ WIDTH, HEIGHT = 1280, 720
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
-# Load images
-RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
 
-# Player player
-YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_yellow.png"))
-
-# Lasers
-RED_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_red.png"))
+# Player ship
+SPACE_SHIP = pygame.image.load(os.path.join("assets", "SpaceShip.png"))
 
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
@@ -57,7 +52,7 @@ def main():
     bulletlist = list()
 
     # Creating a ship at middle of the screen
-    ship = Ship(WIDTH/2, HEIGHT/2)
+    ship = Ship(WIDTH/2-30, 2*HEIGHT/3)
 
     clock = pygame.time.Clock()
 
@@ -287,7 +282,6 @@ def main():
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
             bulletlist.append(Bullet(xb, yb, bulletvelocity, direction))
-            numBullets = numBullets + 1
             num_bullets += 1
             print("Active bullets:" + str(len(bulletlist)))
         
@@ -328,6 +322,10 @@ def home():
 
         home_text2 = home_font.render("---SPACE INVADERS---", 1, (255, 255, 255))
         WINDOW.blit(home_text2, (WIDTH/2 - home_text2.get_width()/2, 280))
+
+        ship = Ship(WIDTH/2-30, 2*HEIGHT/3)
+        ship.draw(WINDOW)
+
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -336,6 +334,7 @@ def home():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 main()
+                run = False
             
     pygame.quit()
 
