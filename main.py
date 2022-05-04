@@ -282,7 +282,6 @@ def main():
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
             bulletlist.append(Bullet(xb, yb, bulletvelocity, direction))
-            numBullets = numBullets + 1
             num_bullets += 1
             print("Active bullets:" + str(len(bulletlist)))
         
@@ -335,6 +334,7 @@ def home():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 main()
+                run = False
             
     pygame.quit()
 
