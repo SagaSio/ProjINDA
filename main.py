@@ -9,27 +9,16 @@ import time
 import random
 from Bullet import *
 from Ship import *
+from Enemy import *
 pygame.font.init()
 
 WIDTH, HEIGHT = 1280, 720
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
-
-
-# Player ship
-SPACE_SHIP = pygame.image.load(os.path.join("assets", "SpaceShip.png"))
-
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
 
-   
-# An abstract class. Won't be used in itself but inherited from!
-
-
-# To be used later
-# Class that inherits from Ship
-# class Player(Ship)
 
 def main():
     run = True
@@ -52,7 +41,13 @@ def main():
     bulletlist = list()
 
     # Creating a ship at middle of the screen
-    ship = Ship(WIDTH/2-30, 2*HEIGHT/3)
+    ship = Ship(WIDTH/2, HEIGHT/2)
+
+    enemiesDown = []
+    enemiesRight = []
+    enemiesLeft = []
+    enemiesUp = []
+    enemy_velocity = 4
 
     clock = pygame.time.Clock()
 
@@ -64,6 +59,18 @@ def main():
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         WINDOW.blit(num_bullets_label, (20,20))
 
+        for enemy in enemiesDown:
+            enemy.draw(WINDOW)
+        
+        for enemy in enemiesRight:
+            enemy.draw(WINDOW)
+
+        for enemy in enemiesLeft:
+            enemy.draw(WINDOW)
+
+        for enemy in enemiesUp:
+            enemy.draw(WINDOW)
+
 
         # The ship will call its own draw method
         ship.draw(WINDOW)
@@ -73,6 +80,10 @@ def main():
                 i.draw(WINDOW)
             else:
                 bulletlist.remove(i)
+
+
+    
+
         pygame.display.update()
 
         #Draw other collidable objects in a loop here. Enemies, asteroids etc. 
@@ -80,6 +91,48 @@ def main():
     while run:
         clock.tick(FPS)
         redraw_window()
+
+
+        if len(enemiesDown) == 0:
+            i = 0
+            while i<3:
+                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100))
+                enemiesDown.append(enemy)
+                i+=1
+
+        if len(enemiesRight) == 0:
+            i = 0
+            while i<3:
+                enemy = Enemy(random.randrange(-1500, -100), random.randrange(50, HEIGHT-100))
+                enemiesRight.append(enemy)
+                i+=1
+
+        if len(enemiesLeft) == 0:
+            i = 0
+            while i<3:
+                enemy = Enemy(random.randrange(WIDTH + 100, WIDTH + 1500), random.randrange(50, HEIGHT-100))
+                enemiesLeft.append(enemy)
+                i+=1
+
+        if len(enemiesUp) == 0:
+            i = 0
+            while i<3:
+                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(HEIGHT+100, HEIGHT+1500))
+                enemiesUp.append(enemy)
+                i+=1
+
+
+        for enemy in enemiesDown:
+             enemy.moveDown(enemy_velocity)
+
+        for enemy in enemiesRight:
+            enemy.moveRight(enemy_velocity)
+
+        for enemy in enemiesLeft:
+            enemy.moveLeft(enemy_velocity)
+
+        for enemy in enemiesUp:
+            enemy.moveUp(enemy_velocity)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -110,6 +163,7 @@ def main():
                     ship.rotation = ship.rotation - turnRate
                 else: 
                     ship.rotation = ship.rotation + turnRate
+                    
 
         if keys[pygame.K_a] and keys[pygame.K_w]: #left and up
             # change in speed
@@ -282,6 +336,7 @@ def main():
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
             bulletlist.append(Bullet(xb, yb, bulletvelocity, direction))
+            numBullets = numBullets + 1
             num_bullets += 1
             print("Active bullets:" + str(len(bulletlist)))
         
@@ -310,6 +365,7 @@ def main():
                 ship.yv = ship.yv * 0.98
 
 
+
 # Creates the home screen
 
 def home():
@@ -322,10 +378,6 @@ def home():
 
         home_text2 = home_font.render("---SPACE INVADERS---", 1, (255, 255, 255))
         WINDOW.blit(home_text2, (WIDTH/2 - home_text2.get_width()/2, 280))
-
-        ship = Ship(WIDTH/2-30, 2*HEIGHT/3)
-        ship.draw(WINDOW)
-
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -334,7 +386,6 @@ def home():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 main()
-                run = False
             
     pygame.quit()
 
