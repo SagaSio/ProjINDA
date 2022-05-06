@@ -12,7 +12,7 @@ from Ship import *
 from Enemy import *
 pygame.font.init()
 
-WIDTH, HEIGHT = 1280, 720
+WIDTH, HEIGHT = 1600, 900
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -24,7 +24,6 @@ def main():
     run = True
     # Constants
     dAngle = 1/math.sqrt(2)
-    # Frames per second
     FPS = 60 
     num_bullets = 0
     main_font = pygame.font.SysFont("righteous", 30)
@@ -36,13 +35,17 @@ def main():
     lockTurn = False
     bulletvelocity = 25
 
+    # Other settings
+    enemy_spawnrate = 1
+    enemy_velocity = 4
+    enemy_rate_of_fire = 0
+
     # List for all player bullets
     numBullets = 0
     bulletlist = list()
 
     # Creating a ship at middle of the screen
     ship = Ship(WIDTH/2, HEIGHT/2)
-
     enemiesDown = []
     enemiesRight = []
     enemiesLeft = []
