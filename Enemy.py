@@ -24,23 +24,3 @@ class Enemy:
         WINDOW.blit(self.asteroid, (self.x, self.y))
 
 
-    def moveDown(self, velocity):
-        if self.y > HEIGHT - 100 and velocity > 0:
-            velocity *= -1
-        
-        self.y += velocity
-
-        
-        
-
-    def moveRight(self, velocity):
-        #self.y += velocity
-        self.x += velocity
-
-    def moveLeft(self, velocity):
-        #self.y -= velocity
-        self.x -= velocity
-
-    def moveUp(self, velocity):
-        self.y -= velocity
-        #self.x -= velocity
