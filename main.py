@@ -48,6 +48,8 @@ def main():
     enemiesLeft = []
     enemiesUp = []
     enemy_velocity = 4
+    enemy_velocity_x = 4
+    enemy_velocity_y = 4
 
     clock = pygame.time.Clock()
 
@@ -96,10 +98,11 @@ def main():
         if len(enemiesDown) == 0:
             i = 0
             while i<3:
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100))
+                enemy = Enemy(random.randrange(50, WIDTH-50), random.randrange(50, HEIGHT-50))
                 enemiesDown.append(enemy)
                 i+=1
 
+        
         if len(enemiesRight) == 0:
             i = 0
             while i<3:
@@ -121,9 +124,10 @@ def main():
                 enemiesUp.append(enemy)
                 i+=1
 
+        
 
         for enemy in enemiesDown:
-             enemy.moveDown(enemy_velocity)
+            enemy.moveDown(enemy_velocity)
 
         for enemy in enemiesRight:
             enemy.moveRight(enemy_velocity)
