@@ -50,7 +50,8 @@ def main():
     enemiesRight = []
     enemiesLeft = []
     enemiesUp = []
-    enemy_velocity = 4
+
+    enemy_velocity_down, enemy_velocity_up, enemy_velocity_left, enemy_velocity_right = 4, 4, 4, 4
 
     clock = pygame.time.Clock()
 
@@ -99,43 +100,57 @@ def main():
         if len(enemiesDown) == 0:
             i = 0
             while i<3:
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100))
+                enemy = Enemy(random.randrange(50, WIDTH-50), random.randrange(-1000, -100))
                 enemiesDown.append(enemy)
                 i+=1
 
+        
         if len(enemiesRight) == 0:
             i = 0
             while i<3:
-                enemy = Enemy(random.randrange(-1500, -100), random.randrange(50, HEIGHT-100))
+                enemy = Enemy(random.randrange(-1000, -100), random.randrange(50, HEIGHT-100))
                 enemiesRight.append(enemy)
                 i+=1
 
         if len(enemiesLeft) == 0:
             i = 0
             while i<3:
-                enemy = Enemy(random.randrange(WIDTH + 100, WIDTH + 1500), random.randrange(50, HEIGHT-100))
+                enemy = Enemy(random.randrange(WIDTH + 100, WIDTH + 1000), random.randrange(50, HEIGHT-100))
                 enemiesLeft.append(enemy)
                 i+=1
 
         if len(enemiesUp) == 0:
             i = 0
             while i<3:
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(HEIGHT+100, HEIGHT+1500))
+                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(HEIGHT+100, HEIGHT+1000))
                 enemiesUp.append(enemy)
                 i+=1
 
+        
 
         for enemy in enemiesDown:
-             enemy.moveDown(enemy_velocity)
+            if enemy.y >= HEIGHT+200 or enemy.y < -1000:
+                enemy_velocity_down *= -1
+            
+            enemy.y += enemy_velocity_down
 
         for enemy in enemiesRight:
-            enemy.moveRight(enemy_velocity)
+            if enemy.x >= HEIGHT+200 or enemy.x <-1000:
+                enemy_velocity_right *= -1
+            
+            enemy.x += enemy_velocity_right
 
         for enemy in enemiesLeft:
-            enemy.moveLeft(enemy_velocity)
+            if enemy.x >= WIDTH + 1000 or enemy.x <-200:
+                enemy_velocity_left *= -1
+            
+            enemy.x += enemy_velocity_left
 
         for enemy in enemiesUp:
-            enemy.moveUp(enemy_velocity)
+            if enemy.y >= HEIGHT+1000 or enemy.y < -200:
+                enemy_velocity_up *= -1
+            
+            enemy.y += enemy_velocity_up
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

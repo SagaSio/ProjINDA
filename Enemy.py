@@ -1,6 +1,9 @@
+from turtle import width
 import pygame
 import os
 from math import pi
+
+WIDTH, HEIGHT = 1280, 720
 
 class Enemy:
     def __init__(self, x, y):
@@ -17,17 +20,7 @@ class Enemy:
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):
-        #pygame.draw.circle(WINDOW, (255, 255, 255), (self.x, self.y), 5)
+
         WINDOW.blit(self.asteroid, (self.x, self.y))
 
-    def moveDown(self, velocity):
-        self.y += velocity
 
-    def moveRight(self, velocity):
-        self.x += velocity
-
-    def moveLeft(self, velocity):
-        self.x -= velocity
-
-    def moveUp(self, velocity):
-        self.y -= velocity
