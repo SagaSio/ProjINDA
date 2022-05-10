@@ -13,7 +13,7 @@ from Enemy import *
 pygame.font.init()
 
 WIDTH, HEIGHT = 1600, 900
-
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Background
@@ -29,11 +29,11 @@ def main():
     main_font = pygame.font.SysFont("righteous", 30)
 
     # Player Settings
-    maxv = 10.0 
+    maxv = 6.0 
     acceleration = 0.5 
     turnRate = pi/48
     lockTurn = False
-    bulletvelocity = 25
+    bulletvelocity = 20
 
     # Other settings
     enemy_spawnrate = 1

@@ -19,7 +19,7 @@ class Enemy:
         spawnangle = randint(0, 359)*pi/180
         self.x = WIDTH/2 + randint(1500, 2000)*cos(spawnangle)
         self.y = HEIGHT/2 + randint(1500, 2000)*sin(spawnangle)
-        self.direction = 2*arctan((randx-self.x)/(randy-self.y))
+        self.direction = 2*arctan((randx-self.x)/(randy-self.y)+ 0.000023)
         self.type = enemy_type
         if(enemy_type < 1):
             velocity = choice([2,3,4])
@@ -46,7 +46,7 @@ class Enemy:
             spawnangle = randint(0, 359)*pi/180
             self.x = WIDTH/2 + randint(1000,2500)*cos(spawnangle)
             self.y = HEIGHT/2 + randint(1000,2500)*sin(spawnangle)
-            self.direction = arctan(randx-self.x/randy-self.y+0.001)
+            self.direction = arctan(randx-self.x/randy-self.y + 0.000023)
 
         if self.type < 1:
             self.x = self.x + self.xv
