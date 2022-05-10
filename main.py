@@ -67,7 +67,6 @@ def main():
             #Remove enemy with 0 or less HP
             if enemy.life <= 0:
                 enemies.remove(enemy)
-                score = score + 10
 
             #Collision check with player
             #distance between center of enemy and player is less than combined radius.
@@ -78,8 +77,8 @@ def main():
 
                 print(collision_angle)
                 #Update velocity
-                enemy.xv = (enemy.xv-ship.xv) * -enemy.radius/ship.radius
-                enemy.yv = (enemy.yv-ship.yv) * -enemy.radius/ship.radius
+                enemy.xv = (enemy.xv-ship.xv) * 0.5*-enemy.radius/ship.radius
+                enemy.yv = (enemy.yv-ship.yv) * 0.5*-enemy.radius/ship.radius
                 enemy.life = enemy.life-10
 
                 ship.xv = -ship.xv*0.5
@@ -91,6 +90,7 @@ def main():
             for bullet in bulletlist:
                 if sqrt(pow(enemy.x-bullet.x,2) + pow(enemy.y-bullet.y,2)) <= enemy.radius:
                     enemy.life = enemy.life - 2
+                    bulletlist.remove(bullet)
 
             #Draw each enemy
             enemy.draw(WINDOW)
