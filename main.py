@@ -37,6 +37,7 @@ def main():
 
     # Other settings
     enemy_spawnrate = 1
+    asteroid_velocity = 1
     enemy_velocity = 4
     enemy_rate_of_fire = 0
 
@@ -46,12 +47,8 @@ def main():
 
     # Creating a ship at middle of the screen
     ship = Ship(WIDTH/2, HEIGHT/2)
-    enemiesDown = []
-    enemiesRight = []
-    enemiesLeft = []
-    enemiesUp = []
+    enemies = []
 
-    enemy_velocity_down, enemy_velocity_up, enemy_velocity_left, enemy_velocity_right = 4, 4, 4, 4
 
     clock = pygame.time.Clock()
 
@@ -63,16 +60,7 @@ def main():
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         WINDOW.blit(num_bullets_label, (20,20))
 
-        for enemy in enemiesDown:
-            enemy.draw(WINDOW)
-        
-        for enemy in enemiesRight:
-            enemy.draw(WINDOW)
-
-        for enemy in enemiesLeft:
-            enemy.draw(WINDOW)
-
-        for enemy in enemiesUp:
+        for enemy in enemies:
             enemy.draw(WINDOW)
 
 
@@ -97,61 +85,7 @@ def main():
         redraw_window()
 
 
-        if len(enemiesDown) == 0:
-            i = 0
-            while i<3:
-                enemy = Enemy(random.randrange(50, WIDTH-50), random.randrange(-1000, -100))
-                enemiesDown.append(enemy)
-                i+=1
-
         
-        if len(enemiesRight) == 0:
-            i = 0
-            while i<3:
-                enemy = Enemy(random.randrange(-1000, -100), random.randrange(50, HEIGHT-100))
-                enemiesRight.append(enemy)
-                i+=1
-
-        if len(enemiesLeft) == 0:
-            i = 0
-            while i<3:
-                enemy = Enemy(random.randrange(WIDTH + 100, WIDTH + 1000), random.randrange(50, HEIGHT-100))
-                enemiesLeft.append(enemy)
-                i+=1
-
-        if len(enemiesUp) == 0:
-            i = 0
-            while i<3:
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(HEIGHT+100, HEIGHT+1000))
-                enemiesUp.append(enemy)
-                i+=1
-
-        
-
-        for enemy in enemiesDown:
-            if enemy.y >= HEIGHT+200 or enemy.y < -1000:
-                enemy_velocity_down *= -1
-            
-            enemy.y += enemy_velocity_down
-
-        for enemy in enemiesRight:
-            if enemy.x >= HEIGHT+200 or enemy.x <-1000:
-                enemy_velocity_right *= -1
-            
-            enemy.x += enemy_velocity_right
-
-        for enemy in enemiesLeft:
-            if enemy.x >= WIDTH + 1000 or enemy.x <-200:
-                enemy_velocity_left *= -1
-            
-            enemy.x += enemy_velocity_left
-
-        for enemy in enemiesUp:
-            if enemy.y >= HEIGHT+1000 or enemy.y < -200:
-                enemy_velocity_up *= -1
-            
-            enemy.y += enemy_velocity_up
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
