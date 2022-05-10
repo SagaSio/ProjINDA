@@ -37,7 +37,6 @@ def main():
 
     # Other settings
     enemy_spawnrate = 1
-    asteroid_velocity = 1
     enemy_velocity = 4
     enemy_rate_of_fire = 0
 
@@ -48,6 +47,9 @@ def main():
     # Creating a ship at middle of the screen
     ship = Ship(WIDTH/2, HEIGHT/2)
     enemies = []
+    
+    for i in range(100):
+        enemies.append(Enemy(0))
 
 
     clock = pygame.time.Clock()
@@ -59,7 +61,7 @@ def main():
         # printing text
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         WINDOW.blit(num_bullets_label, (20,20))
-
+        
         for enemy in enemies:
             enemy.draw(WINDOW)
 
@@ -326,10 +328,10 @@ def home():
     while run:
         WINDOW.blit(BG, (0,0))
         home_text = home_font.render("PRESS THE MOUSE TO BEGIN", 1, (255, 255, 255))
-        WINDOW.blit(home_text, (WIDTH/2 - home_text.get_width()/2, 350))
+        WINDOW.blit(home_text, (int(WIDTH/2 - home_text.get_width()/2), 350))
 
         home_text2 = home_font.render("---SPACE INVADERS---", 1, (255, 255, 255))
-        WINDOW.blit(home_text2, (WIDTH/2 - home_text2.get_width()/2, 280))
+        WINDOW.blit(home_text2, (int(WIDTH/2 - home_text2.get_width()/2), 280))
         pygame.display.update()
 
         for event in pygame.event.get():
