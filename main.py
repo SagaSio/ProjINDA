@@ -29,8 +29,8 @@ def main():
     main_font = pygame.font.SysFont("righteous", 30)
 
     # Player Settings
-    maxv = 6.0 
-    acceleration = 0.5 
+    maxv = 6.0
+    acceleration = 0.3
     turnRate = pi/48
     lockTurn = False
     bulletvelocity = 20
