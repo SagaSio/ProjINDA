@@ -1,7 +1,6 @@
 from dataclasses import dataclass
-from math import sin
-from math import pi
-from math import cos
+from math import atan2, sin, pi, cos, acos
+from numpy import arccos
 import math
 import pygame
 import os
@@ -13,7 +12,7 @@ from Enemy import *
 pygame.font.init()
 
 WIDTH, HEIGHT = 1600, 900
-
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Background
@@ -27,13 +26,13 @@ def main():
     FPS = 60 
     num_bullets = 0
     main_font = pygame.font.SysFont("righteous", 30)
-
+    score = 0
     # Player Settings
-    maxv = 10.0 
-    acceleration = 0.5 
+    maxv = 6.0
+    acceleration = 0.3
     turnRate = pi/48
     lockTurn = False
-    bulletvelocity = 25
+    bulletvelocity = 20
 
     # Other settings
     enemy_spawnrate = 1
@@ -60,9 +59,40 @@ def main():
 
         # printing text
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
+        player_life = main_font.render(f"Life: {ship.life}", 1, (255, 255, 255))
         WINDOW.blit(num_bullets_label, (20,20))
-        
+        WINDOW.blit(player_life, (20, 50))
         for enemy in enemies:
+            
+            #Remove enemy with 0 or less HP
+            if enemy.life <= 0:
+                enemies.remove(enemy)
+
+            #Collision check with player
+            #distance between center of enemy and player is less than combined radius.
+            if sqrt(pow(enemy.x-ship.x,2) + pow(enemy.y-ship.y,2)) <= (enemy.radius + ship.radius):
+
+                #Calculate the collision angle
+                collision_angle = atan2(enemy.yv-ship.yv, enemy.xv-ship.xv)
+
+                print(collision_angle)
+                #Update velocity
+                enemy.xv = (enemy.xv-ship.xv) * 0.5*-enemy.radius/ship.radius
+                enemy.yv = (enemy.yv-ship.yv) * 0.5*-enemy.radius/ship.radius
+                enemy.life = enemy.life-10
+
+                ship.xv = -ship.xv*0.5
+                ship.yv = -ship.yv*0.5
+
+                ship.life = ship.life-10
+
+            #Player bullet collision check here
+            for bullet in bulletlist:
+                if sqrt(pow(enemy.x-bullet.x,2) + pow(enemy.y-bullet.y,2)) <= enemy.radius:
+                    enemy.life = enemy.life - 2
+                    bulletlist.remove(bullet)
+
+            #Draw each enemy
             enemy.draw(WINDOW)
 
 
@@ -85,8 +115,7 @@ def main():
     while run:
         clock.tick(FPS)
         redraw_window()
-
-
+            
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -317,7 +346,6 @@ def main():
                 ship.yv = 0
             else:
                 ship.yv = ship.yv * 0.98
-
 
 
 # Creates the home screen

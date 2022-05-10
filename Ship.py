@@ -15,6 +15,7 @@ class Ship:
         self.rotation = pi/2
         self.xv = 0
         self.yv = 0
+        self.life = 100
         # Allows us to draw the ship. These will be defined as we create the individual ships
         self.ship_img = pygame.image.load(os.path.join("assets", "SpaceShip.png"))
         self.rotated_ship = self.ship_img

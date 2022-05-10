@@ -1,4 +1,8 @@
+.pyc
 __pycache__/Ship.cpython-38.pyc
 __pycache__/Bullet.cpython-38.pyc
+__pycache__/Enemy.cpython-38.pyc
 .gitignore
 sampletext.txt
+
+

@@ -19,39 +19,40 @@ class Enemy:
         spawnangle = randint(0, 359)*pi/180
         self.x = WIDTH/2 + randint(1500, 2000)*cos(spawnangle)
         self.y = HEIGHT/2 + randint(1500, 2000)*sin(spawnangle)
-        self.direction = 2*arctan((randx-self.x)/(randy-self.y))
+        self.direction = 2*arctan((randx-self.x)/(randy-self.y)+ 0.000023)
         self.type = enemy_type
         if(enemy_type < 1):
-            velocity = choice([2,3,4])
+            self.velocity = choice([1.5,2,3,4])
 
             #Vary size and radius here
+            self.life = max(20, abs(enemy_type)*20)
             self.radius = 30
             self.sprite = pygame.image.load(os.path.join("assets", "Asteroid.png"))
         else:
-            velocity = enemy_type
+            self.velocity = enemy_type
             self.radius = 30
             #Add sprite
         self.rotation = pi/2
-        self.xv = velocity*cos(self.direction)
-        self.yv = velocity*sin(self.direction)
+        self.xv = self.velocity*cos(self.direction)
+        self.yv = self.velocity*sin(self.direction)
         
      
     # Adding methods
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):
-        if sqrt(pow(WIDTH/2-self.x, 2) + pow(HEIGHT/2-self.y, 2)) > 5000:
+        if sqrt(pow(WIDTH/2-self.x, 2) + pow(HEIGHT/2-self.y, 2)) > 2000:
             randx = randint(int(WIDTH/4), int(6*WIDTH/8))
             randy = randint(int(HEIGHT/4), int(6*HEIGHT/8))
             spawnangle = randint(0, 359)*pi/180
-            self.x = WIDTH/2 + randint(1000,2500)*cos(spawnangle)
-            self.y = HEIGHT/2 + randint(1000,2500)*sin(spawnangle)
-            self.direction = arctan(randx-self.x/randy-self.y+0.001)
+            self.x = WIDTH/2 + randint(1500,2000)*cos(spawnangle)
+            self.y = HEIGHT/2 + randint(1500,2000)*sin(spawnangle)
+            self.direction = 2*arctan(randx-self.x/randy-self.y + 0.000023)
 
         if self.type < 1:
             self.x = self.x + self.xv
             self.y = self.y + self.yv
-            WINDOW.blit(self.sprite, (int(round(self.x)), int(round(self.y))))
+            WINDOW.blit(self.sprite, (int(round(self.x-self.radius/2)), int(round(self.y-self.radius/2))))
         else:
             pass
 
