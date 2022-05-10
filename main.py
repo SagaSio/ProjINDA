@@ -404,6 +404,7 @@ def home():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 main()
+                run = False
             
     pygame.quit()
 

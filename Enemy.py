@@ -1,4 +1,3 @@
-from turtle import width
 import pygame
 import os
 from math import pi
@@ -20,7 +19,7 @@ class Enemy:
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):
-
+        
         WINDOW.blit(self.asteroid, (self.x, self.y))
 
 
