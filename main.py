@@ -100,7 +100,7 @@ def main():
         ship.draw(WINDOW)
         #Draw all bullets on screen
         for i in bulletlist:
-            if abs(i.x-ship.x) < 3000 and abs(i.y-ship.y) < 3000:
+            if abs(i.x-WIDTH/2) < 1.1*WIDTH and abs(i.y-HEIGHT/2) < 1.1*HEIGHT:
                 i.draw(WINDOW)
             else:
                 bulletlist.remove(i)
