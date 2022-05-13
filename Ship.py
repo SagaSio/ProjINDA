@@ -29,7 +29,7 @@ class Ship:
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):
         # Rate of slowdown for each frame
-        acceleration = 0.1
+        acceleration = 0.05
         # update velocity
         if abs(self.xv)<=acceleration:
             self.xv = 0

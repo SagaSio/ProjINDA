@@ -56,7 +56,6 @@ def main():
     # A function inside of the function
     def redraw_window():
         WINDOW.blit(BG, (0,0))
-
         # printing text
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         player_life = main_font.render(f"Life: {ship.life}", 1, (255, 255, 255))
@@ -73,16 +72,16 @@ def main():
             if sqrt(pow(enemy.x-ship.x,2) + pow(enemy.y-ship.y,2)) <= (enemy.radius + ship.radius):
 
                 #Calculate the collision angle
-                collision_angle = atan2(enemy.yv-ship.yv, enemy.xv-ship.xv)
+                # collision_angle = atan2(enemy.yv-ship.yv, enemy.xv-ship.xv)
 
-                print(collision_angle)
+                # print(collision_angle)
                 #Update velocity
                 enemy.xv = (enemy.xv-ship.xv) * 0.5*-enemy.radius/ship.radius
                 enemy.yv = (enemy.yv-ship.yv) * 0.5*-enemy.radius/ship.radius
                 enemy.life = enemy.life-10
 
-                ship.xv = -ship.xv*0.5
-                ship.yv = -ship.yv*0.5
+                ship.xv = -ship.xv*0.8
+                ship.yv = -ship.yv*0.8
 
                 ship.life = ship.life-10
 
@@ -126,7 +125,7 @@ def main():
         keys = pygame.key.get_pressed()
 
         # List of available key presses:
-        #  WASD, 1, SPACE, RETURN
+        #  WASD, 1, SPACE, RETURN, O, P
         if keys[pygame.K_a] and not keys[pygame.K_w] or keys[pygame.K_a] and not keys[pygame.K_s]: #left exlusive
             # change in speed
             if ship.xv>-maxv:
