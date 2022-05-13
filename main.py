@@ -19,7 +19,9 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
 
 def main():
+
     run = True
+
     # Constants
     dAngle = 1/math.sqrt(2)
     FPS = 60 
@@ -46,7 +48,8 @@ def main():
 
     amount_Time = 0
 
-    num_collisions = 0
+
+    
 
     
 
@@ -69,7 +72,7 @@ def main():
         player_life = main_font.render(f"LIVES: {ship.life}", 1, (255, 255, 255))
         num_Kills_label = main_font.render(f"KILLS: {num_Kills}", 1, (255, 255, 255))
         time_label = main_font.render(f"TIME: {amount_Time}", 1, (255, 255, 255))
-        collision_label = main_font.render(f"Collisions: {num_collisions}", 1, (255, 255, 255))
+        collision_label = main_font.render(f"COLLISIONS: {ship.enemiesHit}", 1, (255, 255, 255))
 
         WINDOW.blit(num_bullets_label, (20,20))
         WINDOW.blit(player_life, (20, 50))
@@ -89,6 +92,9 @@ def main():
 
                 #Calculate the collision angle
                 collision_angle = atan2(enemy.yv-ship.yv, enemy.xv-ship.xv)
+
+                #Increase amount of collisions
+                ship.enemiesHit = ship.enemiesHit + 1
 
                 print(collision_angle)
                 #Update velocity
@@ -134,7 +140,7 @@ def main():
         redraw_window()
 
         if ship.life <= 0:
-            GAMEOVER(numBullets, num_Kills, amount_Time, num_collisions)  
+            GAMEOVER(numBullets, num_Kills, amount_Time, ship.enemiesHit)  
 
         
         for event in pygame.event.get():
