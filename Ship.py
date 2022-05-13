@@ -16,11 +16,15 @@ class Ship:
         self.xv = 0
         self.yv = 0
         
+        # The target health
         self.life = 10
         # Code for the healthbar
         self.lifeMax = 10
         self.healthbarLength = 400
         self.healthRatio = self.lifeMax / self.healthbarLength
+        # The current health. Is animated
+        self.currentLife = 10
+        self.lifeChangeSpeed = 4
         
         self.enemiesHit = 0
         # Allows us to draw the ship. These will be defined as we create the individual ships
@@ -35,9 +39,26 @@ class Ship:
 
     def drawHealthbar(self, WINDOW):
         # the red
-        pygame.draw.rect(WINDOW, (255, 0, 0), (10, 10, self.life/ self.healthRatio, 25))
+        pygame.draw.rect(WINDOW, (255, 0, 0), (20, 10, self.life/ self.healthRatio, 25))
         # the white boundary
-        pygame.draw.rect(WINDOW, (255, 255, 255), (10, 10, self.healthbarLength, 25), 2)
+        pygame.draw.rect(WINDOW, (255, 255, 255), (20, 10, self.healthbarLength, 25), 2)
+
+        #animationHealthWidth = 0
+        #animationHealthColor = (255, 0, 0)
+
+        #if self.currentLife > self.life:
+        #    self.currentLife -= self.lifeChangeSpeed
+        #    animationHealthWidth = int((self.life - self.currentLife)/self.healthRatio)
+        #    animationHealthColor = (255, 255, 0)
+
+        #healthbar = pygame.Rect(10, 10, self.currentLife/self.healthRatio, 25)
+        # This animated healthbar begins wherever the healthbar ends
+        #animation_healthbar = pygame.Rect(healthbar.right, 10, animationHealthWidth, 25)
+
+        #pygame.draw.rect(WINDOW, (255, 0, 0), healthbar)
+        #pygame.draw.rect(WINDOW, animationHealthColor, animation_healthbar)
+
+        #pygame.draw.rect(WINDOW, (255, 255, 255), (10, 10, self.healthbarLength, 25), 2)
 
 
     # Drawing method. Draws on the surface "WINDOW"

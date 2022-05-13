@@ -74,11 +74,17 @@ def main():
         time_label = main_font.render(f"TIME: {amount_Time}", 1, (255, 255, 255))
         collision_label = main_font.render(f"COLLISIONS: {ship.enemiesHit}", 1, (255, 255, 255))
 
-        WINDOW.blit(num_bullets_label, (20,20))
-        WINDOW.blit(player_life, (20, 50))
+        WINDOW.blit(player_life, (20,50))
         WINDOW.blit(num_Kills_label, (20, 80))
         WINDOW.blit(time_label, (20, 110))
-        WINDOW.blit(collision_label, (20, 140))
+        WINDOW.blit(num_bullets_label, (20, 140))
+        WINDOW.blit(collision_label, (20, 170))
+
+        WINDOW.blit(num_bullets_label, (20,50))
+        WINDOW.blit(player_life, (20, 80))
+        WINDOW.blit(num_Kills_label, (20, 110))
+        WINDOW.blit(time_label, (20, 140))
+        WINDOW.blit(collision_label, (20, 170))
 
         for enemy in enemies:
             
@@ -381,14 +387,15 @@ def main():
 # Creates the home screen
 
 def home():
+    large_font = pygame.font.SysFont("righteous", 200)
     home_font = pygame.font.SysFont("righteous", 60)
     run = True
     while run:
         WINDOW.blit(BG, (0,0))
         home_text = home_font.render("PRESS THE MOUSE TO BEGIN", 1, (255, 255, 255))
-        WINDOW.blit(home_text, (int(WIDTH/2 - home_text.get_width()/2), 350))
+        WINDOW.blit(home_text, (int(WIDTH/2 - home_text.get_width()/2), 550))
 
-        home_text2 = home_font.render("---SPACE INVADERS---", 1, (255, 255, 255))
+        home_text2 = large_font.render("SPACE INVADERS", 1, (255, 255, 255))
         WINDOW.blit(home_text2, (int(WIDTH/2 - home_text2.get_width()/2), 280))
         pygame.display.update()
 
@@ -412,7 +419,7 @@ def GAMEOVER(bullets, kills, time, collisions):
         GAMEOVER_text = GAMEOVER_font.render("GAME OVER", 1, (255, 255, 255))
         WINDOW.blit(GAMEOVER_text, (int(WIDTH/2 - GAMEOVER_text.get_width()/2), 100))
 
-        retry_text = medium_font.render("PRESS THE MOUSBUTTON TO RESTART", 1, (255, 255, 255))
+        retry_text = medium_font.render("PRESS THE MOUSEBUTTON TO RESTART", 1, (255, 255, 255))
         WINDOW.blit(retry_text, (int(WIDTH/2 - retry_text.get_width()/2), 350))
 
         bullets_text = smaller_font.render("AMOUNT OF BULLETS: " + str(bullets), 1, (255, 255, 255))
