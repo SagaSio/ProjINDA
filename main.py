@@ -43,6 +43,10 @@ def main():
     numBullets = 0
     bulletlist = list()
 
+    num_Kills = 0
+
+    amount_Time = 0
+
     # Creating a ship at middle of the screen
     ship = Ship(WIDTH/2, HEIGHT/2)
     enemies = []
@@ -59,9 +63,14 @@ def main():
 
         # printing text
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
-        player_life = main_font.render(f"Life: {ship.life}", 1, (255, 255, 255))
+        player_life = main_font.render(f"LIVES: {ship.life}", 1, (255, 255, 255))
+        num_Kills_label = main_font.render(f"KILLS: {num_Kills}", 1, (255, 255, 255))
+        time_label = main_font.render(f"TIME: {num_Kills}", 1, (255, 255, 255))
         WINDOW.blit(num_bullets_label, (20,20))
         WINDOW.blit(player_life, (20, 50))
+        WINDOW.blit(num_Kills_label, (20, 80))
+        WINDOW.blit(time_label, (20, 110))
+
         for enemy in enemies:
             
             #Remove enemy with 0 or less HP
@@ -79,12 +88,12 @@ def main():
                 #Update velocity
                 enemy.xv = (enemy.xv-ship.xv) * 0.5*-enemy.radius/ship.radius
                 enemy.yv = (enemy.yv-ship.yv) * 0.5*-enemy.radius/ship.radius
-                enemy.life = enemy.life-10
+                enemy.life = enemy.life-1
 
                 ship.xv = -ship.xv*0.5
                 ship.yv = -ship.yv*0.5
 
-                ship.life = ship.life-10
+                ship.life = ship.life-1
 
             #Player bullet collision check here
             for bullet in bulletlist:
@@ -115,7 +124,10 @@ def main():
     while run:
         clock.tick(FPS)
         redraw_window()
-            
+
+        if ship.life <= 0:
+            GAMEOVER(numBullets, num_Kills, amount_Time)  
+
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -360,6 +372,40 @@ def home():
 
         home_text2 = home_font.render("---SPACE INVADERS---", 1, (255, 255, 255))
         WINDOW.blit(home_text2, (int(WIDTH/2 - home_text2.get_width()/2), 280))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                main()
+                run = False
+            
+    pygame.quit()
+
+def GAMEOVER(bullets, kills, time):
+    GAMEOVER_font = pygame.font.SysFont("righteous", 200)
+    medium_font = pygame.font.SysFont("righteous", 75)
+    smaller_font = pygame.font.SysFont("righteous", 25)
+    run = True
+    while run:
+        WINDOW.blit(BG, (0,0))
+        GAMEOVER_text = GAMEOVER_font.render("GAME OVER", 1, (255, 255, 255))
+        WINDOW.blit(GAMEOVER_text, (int(WIDTH/2 - GAMEOVER_text.get_width()/2), 100))
+
+        retry_text = medium_font.render("PRESS THE MOUSBUTTON TO RESTART", 1, (255, 255, 255))
+        WINDOW.blit(retry_text, (int(WIDTH/2 - retry_text.get_width()/2), 350))
+
+        bullets_text = smaller_font.render("AMOUNT OF BULLETS: " + str(bullets), 1, (255, 255, 255))
+        WINDOW.blit(bullets_text, (int(WIDTH/2 - bullets_text.get_width()/2), 450))
+
+        kills_text = smaller_font.render("AMOUNT OF KILLS: " + str(kills), 1, (255, 255, 255))
+        WINDOW.blit(kills_text, (int(WIDTH/2 - kills_text.get_width()/2), 485))
+        
+        time_text = smaller_font.render("TIME SURVIVED: " + str(time), 1, (255, 255, 255))
+        WINDOW.blit(time_text, (int(WIDTH/2 - time_text.get_width()/2), 515))
+
         pygame.display.update()
 
         for event in pygame.event.get():
