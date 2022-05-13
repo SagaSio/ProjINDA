@@ -15,7 +15,13 @@ class Ship:
         self.rotation = pi/2
         self.xv = 0
         self.yv = 0
+        
         self.life = 10
+        # Code for the healthbar
+        self.lifeMax = 10
+        self.healthbarLength = 400
+        self.healthRatio = self.lifeMax / self.healthbarLength
+        
         self.enemiesHit = 0
         # Allows us to draw the ship. These will be defined as we create the individual ships
         self.ship_img = pygame.image.load(os.path.join("assets", "SpaceShip.png"))
@@ -26,6 +32,13 @@ class Ship:
         self.bullet_Pause = 0
      
     # Adding methods
+
+    def drawHealthbar(self, WINDOW):
+        # the red
+        pygame.draw.rect(WINDOW, (255, 0, 0), (10, 10, self.life/ self.healthRatio, 25))
+        # the white boundary
+        pygame.draw.rect(WINDOW, (255, 255, 255), (10, 10, self.healthbarLength, 25), 2)
+
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW):

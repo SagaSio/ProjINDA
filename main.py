@@ -121,6 +121,10 @@ def main():
 
         # The ship will call its own draw method
         ship.draw(WINDOW)
+
+        # Calls the health bar method
+        ship.drawHealthbar(WINDOW)
+
         #Draw all bullets on screen
         for i in bulletlist:
             if abs(i.x-ship.x) < 3000 and abs(i.y-ship.y) < 3000:
