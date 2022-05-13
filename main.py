@@ -18,7 +18,6 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
 
-
 def main():
     run = True
     # Constants
@@ -47,6 +46,10 @@ def main():
 
     amount_Time = 0
 
+    num_collisions = 0
+
+    
+
     # Creating a ship at middle of the screen
     ship = Ship(WIDTH/2, HEIGHT/2)
     enemies = []
@@ -65,11 +68,14 @@ def main():
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         player_life = main_font.render(f"LIVES: {ship.life}", 1, (255, 255, 255))
         num_Kills_label = main_font.render(f"KILLS: {num_Kills}", 1, (255, 255, 255))
-        time_label = main_font.render(f"TIME: {num_Kills}", 1, (255, 255, 255))
+        time_label = main_font.render(f"TIME: {amount_Time}", 1, (255, 255, 255))
+        collision_label = main_font.render(f"Collisions: {num_collisions}", 1, (255, 255, 255))
+
         WINDOW.blit(num_bullets_label, (20,20))
         WINDOW.blit(player_life, (20, 50))
         WINDOW.blit(num_Kills_label, (20, 80))
         WINDOW.blit(time_label, (20, 110))
+        WINDOW.blit(collision_label, (20, 140))
 
         for enemy in enemies:
             
@@ -94,6 +100,8 @@ def main():
                 ship.yv = -ship.yv*0.5
 
                 ship.life = ship.life-1
+
+
 
             #Player bullet collision check here
             for bullet in bulletlist:
@@ -126,7 +134,7 @@ def main():
         redraw_window()
 
         if ship.life <= 0:
-            GAMEOVER(numBullets, num_Kills, amount_Time)  
+            GAMEOVER(numBullets, num_Kills, amount_Time, num_collisions)  
 
         
         for event in pygame.event.get():
@@ -384,7 +392,7 @@ def home():
             
     pygame.quit()
 
-def GAMEOVER(bullets, kills, time):
+def GAMEOVER(bullets, kills, time, collisions):
     GAMEOVER_font = pygame.font.SysFont("righteous", 200)
     medium_font = pygame.font.SysFont("righteous", 75)
     smaller_font = pygame.font.SysFont("righteous", 25)
@@ -405,6 +413,9 @@ def GAMEOVER(bullets, kills, time):
         
         time_text = smaller_font.render("TIME SURVIVED: " + str(time), 1, (255, 255, 255))
         WINDOW.blit(time_text, (int(WIDTH/2 - time_text.get_width()/2), 515))
+
+        collision_text = smaller_font.render("AMOUNT OF COLLISIONS: " + str(collisions), 1, (255, 255, 255))
+        WINDOW.blit(collision_text, (int(WIDTH/2 - collision_text.get_width()/2), 545))
 
         pygame.display.update()
 
