@@ -80,11 +80,7 @@ def main():
         WINDOW.blit(num_bullets_label, (20, 140))
         WINDOW.blit(collision_label, (20, 170))
 
-        WINDOW.blit(num_bullets_label, (20,50))
-        WINDOW.blit(player_life, (20, 80))
-        WINDOW.blit(num_Kills_label, (20, 110))
-        WINDOW.blit(time_label, (20, 140))
-        WINDOW.blit(collision_label, (20, 170))
+
 
         for enemy in enemies:
             
