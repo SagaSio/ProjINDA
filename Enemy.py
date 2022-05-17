@@ -1,8 +1,9 @@
+import math
 from numpy import arctan
 from random import choice, randint
 import pygame
 import os
-from math import cos
+from math import atan2, cos
 from math import sin
 from math import pi
 from math import pow
@@ -21,6 +22,7 @@ class Enemy:
         self.y = HEIGHT/2 + randint(1500, 2000)*sin(spawnangle)
         self.direction = 2*arctan((randx-self.x)/(randy-self.y)+ 0.000023)
         self.type = enemy_type
+        #Spawns an asteroid
         if(enemy_type < 1):
             self.velocity = choice([1.5,2,3,4])
 
@@ -28,10 +30,15 @@ class Enemy:
             self.life = max(20, abs(enemy_type)*20)
             self.radius = 30
             self.sprite = pygame.image.load(os.path.join("assets", "Asteroid.png"))
+        #Spawns a ship. Higher type number creates a stronger enemy    
         else:
+            self.life = 5*enemy_type
             self.velocity = enemy_type
             self.radius = 30
             #Add sprite
+            self.sprite = pygame.image.load(os.path.join("assets", "EnemyShip.png"))
+            self.bulletCooldown = 0
+        self.rotated_ship = self.sprite
         self.rotation = pi/2
         self.xv = self.velocity*cos(self.direction)
         self.yv = self.velocity*sin(self.direction)
@@ -40,7 +47,7 @@ class Enemy:
     # Adding methods
 
     # Drawing method. Draws on the surface "WINDOW"
-    def draw(self, WINDOW):
+    def draw(self, WINDOW, ship):
         if sqrt(pow(WIDTH/2-self.x, 2) + pow(HEIGHT/2-self.y, 2)) > 2000:
             randx = randint(int(WIDTH/4), int(6*WIDTH/8))
             randy = randint(int(HEIGHT/4), int(6*HEIGHT/8))
@@ -54,6 +61,10 @@ class Enemy:
             self.y = self.y + self.yv
             WINDOW.blit(self.sprite, (int(round(self.x-self.radius/2)), int(round(self.y-self.radius/2))))
         else:
-            pass
-
+            self.rotated_ship = pygame.transform.rotate(self.sprite, int((-math.degrees(self.rotation)-90)%360))
+            self.rotation = atan2(self.x-ship.x, self.y-ship.y)
+            self.bulletCooldown = self.bulletCooldown - 1
+            self.x = self.x + self.xv
+            self.y = self.y + self.yv
+            WINDOW.blit(self.rotated_ship, (int(round(self.x-self.radius/2)), int(round(self.y-self.radius/2))))
 
