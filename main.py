@@ -29,7 +29,7 @@ def main():
     main_font = pygame.font.SysFont("righteous", 30)
     score = 0
     # Player Settings
-    maxv = 6.0
+    maxv = 8
     acceleration = 0.3
     turnRate = pi/48
     lockTurn = False
@@ -71,14 +71,14 @@ def main():
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         player_life = main_font.render(f"LIVES: {ship.life}", 1, (255, 255, 255))
         num_Kills_label = main_font.render(f"KILLS: {num_Kills}", 1, (255, 255, 255))
-        time_label = main_font.render(f"TIME: {amount_Time}", 1, (255, 255, 255))
+        time_label = main_font.render(f"TIME: {amount_Time/1000}", 1, (255, 255, 255))
         collision_label = main_font.render(f"COLLISIONS: {ship.enemiesHit}", 1, (255, 255, 255))
 
-        WINDOW.blit(player_life, (20,50))
-        WINDOW.blit(num_Kills_label, (20, 80))
-        WINDOW.blit(time_label, (20, 110))
-        WINDOW.blit(num_bullets_label, (20, 140))
-        WINDOW.blit(collision_label, (20, 170))
+        #WINDOW.blit(player_life, (20,50))
+        #WINDOW.blit(num_Kills_label, (20, 80))
+        #WINDOW.blit(time_label, (20, 110))
+        #WINDOW.blit(num_bullets_label, (20, 140))
+        #WINDOW.blit(collision_label, (20, 170))
 
         WINDOW.blit(num_bullets_label, (20,50))
         WINDOW.blit(player_life, (20, 80))
@@ -147,6 +147,7 @@ def main():
 
     while run:
         clock.tick(FPS)
+        amount_Time = amount_Time + clock.get_time()
         redraw_window()
 
         if ship.life <= 0:
