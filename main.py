@@ -16,7 +16,7 @@ os.environ['SDL_VIDEO_CENTERED'] = '1'
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Background
-BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
+BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "Background.png")), (WIDTH, HEIGHT))
 
 def main():
 
