@@ -38,12 +38,11 @@ def main():
     # Other settings
     enemy_spawnrate = 1
     enemy_velocity = 4
-    enemy_rate_of_fire = 0
 
     # List for all player bullets
     numBullets = 0
     bulletlist = list()
-
+    enemyBullets = list()
     num_Kills = 0
 
     amount_Time = 0
@@ -57,9 +56,10 @@ def main():
     ship = Ship(WIDTH/2, HEIGHT/2)
     enemies = []
     
-    for i in range(100):
+    for i in range(50):
         enemies.append(Enemy(0))
-
+        if i%5 == 0:
+            enemies.append(Enemy(3))
 
     clock = pygame.time.Clock()
 
@@ -86,6 +86,7 @@ def main():
         WINDOW.blit(time_label, (20, 140))
         WINDOW.blit(collision_label, (20, 170))
 
+        #Draw and handle logic for all enemies
         for enemy in enemies:
             
             #Remove enemy with 0 or less HP
@@ -113,8 +114,11 @@ def main():
 
                 ship.life = ship.life-1
 
+            #Handle enemy shooting bullets.
+            if enemy.type > 0 and enemy.bulletCooldown <=0:
 
-
+                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 10, enemy.rotation))
+                enemy.bulletCooldown = int(100/enemy.type)
             #Player bullet collision check here
             for bullet in bulletlist:
                 if sqrt(pow(enemy.x-bullet.x,2) + pow(enemy.y-bullet.y,2)) <= enemy.radius:
@@ -122,7 +126,7 @@ def main():
                     bulletlist.remove(bullet)
 
             #Draw each enemy
-            enemy.draw(WINDOW)
+            enemy.draw(WINDOW,ship)
 
 
         # The ship will call its own draw method
@@ -137,9 +141,16 @@ def main():
                 i.draw(WINDOW)
             else:
                 bulletlist.remove(i)
-
-
-    
+        for j in enemyBullets:
+            if abs(j.x-ship.x) < 3000 and abs(j.y-ship.y) < 3000:
+                j.draw(WINDOW)
+            else:
+                enemyBullets.remove(j)
+                
+        for k in enemyBullets:
+            if sqrt(pow(ship.x-k.x,2) + pow(ship.y-k.y,2)) <= ship.radius:
+                ship.life = ship.life - 1
+                enemyBullets.remove(k)
 
         pygame.display.update()
 
