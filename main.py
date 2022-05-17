@@ -29,7 +29,7 @@ def main():
     main_font = pygame.font.SysFont("righteous", 30)
     score = 0
     # Player Settings
-    maxv = 6.0
+    maxv = 8
     acceleration = 0.3
     turnRate = pi/48
     lockTurn = False
@@ -38,12 +38,11 @@ def main():
     # Other settings
     enemy_spawnrate = 1
     enemy_velocity = 4
-    enemy_rate_of_fire = 0
 
     # List for all player bullets
     numBullets = 0
     bulletlist = list()
-
+    enemyBullets = list()
     num_Kills = 0
 
     amount_Time = 0
@@ -57,9 +56,10 @@ def main():
     ship = Ship(WIDTH/2, HEIGHT/2)
     enemies = []
     
-    for i in range(100):
+    for i in range(50):
         enemies.append(Enemy(0))
-
+        if i%5 == 0:
+            enemies.append(Enemy(3))
 
     clock = pygame.time.Clock()
 
@@ -71,17 +71,18 @@ def main():
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         player_life = main_font.render(f"LIVES: {ship.life}", 1, (255, 255, 255))
         num_Kills_label = main_font.render(f"KILLS: {num_Kills}", 1, (255, 255, 255))
-        time_label = main_font.render(f"TIME: {amount_Time}", 1, (255, 255, 255))
+        time_label = main_font.render(f"TIME: {amount_Time/1000}", 1, (255, 255, 255))
         collision_label = main_font.render(f"COLLISIONS: {ship.enemiesHit}", 1, (255, 255, 255))
 
-        WINDOW.blit(player_life, (20,50))
-        WINDOW.blit(num_Kills_label, (20, 80))
-        WINDOW.blit(time_label, (20, 110))
-        WINDOW.blit(num_bullets_label, (20, 140))
-        WINDOW.blit(collision_label, (20, 170))
+        #WINDOW.blit(player_life, (20,50))
+        #WINDOW.blit(num_Kills_label, (20, 80))
+        #WINDOW.blit(time_label, (20, 110))
+        #WINDOW.blit(num_bullets_label, (20, 140))
+        #WINDOW.blit(collision_label, (20, 170))
 
 
 
+        #Draw and handle logic for all enemies
         for enemy in enemies:
             
             #Remove enemy with 0 or less HP
@@ -109,8 +110,11 @@ def main():
 
                 ship.life = ship.life-1
 
+            #Handle enemy shooting bullets.
+            if enemy.type > 0 and enemy.bulletCooldown <=0:
 
-
+                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 10, enemy.rotation))
+                enemy.bulletCooldown = int(100/enemy.type)
             #Player bullet collision check here
             for bullet in bulletlist:
                 if sqrt(pow(enemy.x-bullet.x,2) + pow(enemy.y-bullet.y,2)) <= enemy.radius:
@@ -118,7 +122,7 @@ def main():
                     bulletlist.remove(bullet)
 
             #Draw each enemy
-            enemy.draw(WINDOW)
+            enemy.draw(WINDOW,ship)
 
 
         # The ship will call its own draw method
@@ -133,9 +137,16 @@ def main():
                 i.draw(WINDOW)
             else:
                 bulletlist.remove(i)
-
-
-    
+        for j in enemyBullets:
+            if abs(j.x-ship.x) < 3000 and abs(j.y-ship.y) < 3000:
+                j.draw(WINDOW)
+            else:
+                enemyBullets.remove(j)
+                
+        for k in enemyBullets:
+            if sqrt(pow(ship.x-k.x,2) + pow(ship.y-k.y,2)) <= ship.radius:
+                ship.life = ship.life - 1
+                enemyBullets.remove(k)
 
         pygame.display.update()
 
@@ -143,6 +154,7 @@ def main():
 
     while run:
         clock.tick(FPS)
+        amount_Time = amount_Time + clock.get_time()
         redraw_window()
 
         if ship.life <= 0:
