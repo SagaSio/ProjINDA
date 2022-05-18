@@ -26,7 +26,7 @@ def main():
     FPS = 60 
     num_bullets = 0
     main_font = pygame.font.SysFont("righteous", 30)
-    score = 0
+
     # Player Settings
     maxv = 8
     acceleration = 0.3
@@ -118,7 +118,7 @@ def main():
 
             #Handle enemy shooting bullets.
             if enemy.type > 0 and enemy.bulletCooldown <=0:
-                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 10, enemy.rotation, 0))
+                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 3*enemy.type, enemy.rotation, 1))
                 enemy.bulletCooldown = int(300/enemy.type)
 
             #Player bullet collision check here
@@ -368,7 +368,7 @@ def main():
             direction = ship.rotation
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
-            bulletlist.append(Bullet(xb, yb, bulletvelocity, direction, 1))
+            bulletlist.append(Bullet(xb, yb, bulletvelocity, direction, 0))
             numBullets = numBullets + 1
             num_bullets += 1
             print("Active bullets:" + str(len(bulletlist)))
