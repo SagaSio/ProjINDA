@@ -48,11 +48,6 @@ def main():
 
     amount_Time = 0
 
-
-    
-
-    
-
     # Creating a ship at middle of the screen
     ship = Ship(WIDTH/2, HEIGHT/2)
     enemies = []
