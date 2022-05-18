@@ -11,6 +11,8 @@ from Bullet import *
 from Ship import *
 from Enemy import *
 pygame.font.init()
+from pygame import mixer
+pygame.init()
 
 WIDTH, HEIGHT = 1600, 900
 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -22,6 +24,9 @@ BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "Background
 def main():
 
     run = True
+
+    mixer.music.load(os.path.join("assets", "backgroundMusic.mp3"))
+    mixer.music.play(-1)
 
     # Constants
     dAngle = 1/math.sqrt(2)
@@ -94,6 +99,9 @@ def main():
                     ship.score = ship.score + 10*enemy.type
                     ship.enemiesHit = ship.enemiesHit + 1
                     ship.enemy_counter = ship.enemy_counter - 1
+
+                explosion_Sound = mixer.Sound(os.path.join("assets", "explosion.wav"))
+                explosion_Sound.play()
                 enemies.remove(enemy)
                 
 
@@ -371,6 +379,8 @@ def main():
 
         # Shoots bullets
         if  keys[pygame.K_SPACE]:
+            warp_Sound = mixer.Sound(os.path.join("assets", "warp.wav"))
+            warp_Sound.play()
             direction = ship.rotation
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
@@ -435,7 +445,13 @@ def GAMEOVER(bullets, score, time, collisions):
     smaller_font = pygame.font.SysFont("righteous", 25)
     smallest_font = pygame.font.SysFont("righteous", 20)
     run = True
+    mixer.music.stop()
+    gameOver_Sound = mixer.Sound(os.path.join("assets", "gameOver.wav"))
+    gameOver_Sound.play()
+    
     while run:
+
+
         WINDOW.blit(BG, (0,0))
         GAMEOVER_text = GAMEOVER_font.render("GAME OVER", 1, (255, 255, 255))
         WINDOW.blit(GAMEOVER_text, (int(WIDTH/2 - GAMEOVER_text.get_width()/2), 100))
