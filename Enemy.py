@@ -18,8 +18,8 @@ class Enemy:
         randy = randint(int(HEIGHT/8), int(7*HEIGHT/8))
         
         spawnangle = randint(0, 359)*pi/180
-        self.x = WIDTH/2 + randint(1500, 2000)*cos(spawnangle)
-        self.y = HEIGHT/2 + randint(1500, 2000)*sin(spawnangle)
+        self.x = WIDTH/2 + randint(1000, 1500)*cos(spawnangle)
+        self.y = HEIGHT/2 + randint(500, 1000)*sin(spawnangle)
         self.direction = 2*arctan((randx-self.x)/(randy-self.y)+ 0.000023)
         self.type = enemy_type
         #Spawns an asteroid
@@ -48,12 +48,12 @@ class Enemy:
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW, ship):
-        if sqrt(pow(WIDTH/2-self.x, 2) + pow(HEIGHT/2-self.y, 2)) > 2000:
+        if sqrt(pow(WIDTH/2-self.x, 2) + pow(HEIGHT/2-self.y, 2)) > 1000:
             randx = randint(int(WIDTH/4), int(6*WIDTH/8))
             randy = randint(int(HEIGHT/4), int(6*HEIGHT/8))
             spawnangle = randint(0, 359)*pi/180
-            self.x = WIDTH/2 + randint(1500,2000)*cos(spawnangle)
-            self.y = HEIGHT/2 + randint(1500,2000)*sin(spawnangle)
+            self.x = WIDTH/2 + randint(1000,1500)*cos(spawnangle)
+            self.y = HEIGHT/2 + randint(500,1000)*sin(spawnangle)
             self.direction = 2*arctan(randx-self.x/randy-self.y + 0.000023)
 
         if self.type < 1:
@@ -62,7 +62,7 @@ class Enemy:
             WINDOW.blit(self.sprite, (int(round(self.x-self.radius/2)), int(round(self.y-self.radius/2))))
         else:
             self.rotated_ship = pygame.transform.rotate(self.sprite, int((-math.degrees(self.rotation)-90)%360))
-            self.rotation = atan2(self.x-ship.x, self.y-ship.y)
+            self.rotation = atan2(ship.y-self.y, ship.x-self.x)
             self.bulletCooldown = self.bulletCooldown - 1
             self.x = self.x + self.xv
             self.y = self.y + self.yv

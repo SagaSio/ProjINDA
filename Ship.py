@@ -25,8 +25,9 @@ class Ship:
         # The current health. Is animated
         self.currentLife = 10
         self.lifeChangeSpeed = 4
-        
+        self.score = 0
         self.enemiesHit = 0
+        self.enemy_counter = 0
         # Allows us to draw the ship. These will be defined as we create the individual ships
         self.ship_img = pygame.image.load(os.path.join("assets", "SpaceShip.png"))
         self.rotated_ship = self.ship_img

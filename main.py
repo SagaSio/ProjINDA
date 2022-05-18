@@ -1,5 +1,6 @@
+
 from dataclasses import dataclass
-from math import atan2, sin, pi, cos, acos
+from math import atan2, sin, pi, cos, log
 from numpy import arccos
 import math
 import pygame
@@ -36,19 +37,16 @@ def main():
     # Player Settings
     maxv = 8
     acceleration = 0.3
-    turnRate = pi/48
+    turnRate = pi/60
     lockTurn = False
     bulletvelocity = 20
 
     # Other settings
-    enemy_spawnrate = 1
-    enemy_velocity = 4
 
     # List for all player bullets
     numBullets = 0
     bulletlist = list()
     enemyBullets = list()
-    num_Kills = 0
 
     amount_Time = 0
 
@@ -61,10 +59,11 @@ def main():
     ship = Ship(WIDTH/2, HEIGHT/2)
     enemies = []
     
-    for i in range(50):
+    for i in range(20):
         enemies.append(Enemy(0))
         if i%5 == 0:
-            enemies.append(Enemy(3))
+            ship.enemy_counter = ship.enemy_counter + 1
+            enemies.append(Enemy(1))
 
     clock = pygame.time.Clock()
 
@@ -75,26 +74,36 @@ def main():
         # printing text
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         player_life = main_font.render(f"LIVES: {ship.life}", 1, (255, 255, 255))
-        num_Kills_label = main_font.render(f"KILLS: {num_Kills}", 1, (255, 255, 255))
+        num_Kills_label = main_font.render(f"KILLS: {ship.enemiesHit}", 1, (255, 255, 255))
         time_label = main_font.render(f"TIME: {amount_Time/1000}", 1, (255, 255, 255))
-        collision_label = main_font.render(f"COLLISIONS: {ship.enemiesHit}", 1, (255, 255, 255))
+        score_label = main_font.render(f"SCORE: {ship.score}", 1, (255, 255, 255))
 
-        WINDOW.blit(player_life, (20,50))
-        WINDOW.blit(num_Kills_label, (20, 80))
-        WINDOW.blit(time_label, (20, 110))
-        WINDOW.blit(num_bullets_label, (20, 140))
-        WINDOW.blit(collision_label, (20, 170))
+        WINDOW.blit(num_bullets_label, (20,50))
+        WINDOW.blit(player_life, (20, 80))
+        WINDOW.blit(num_Kills_label, (20, 110))
+        WINDOW.blit(time_label, (20, 140))
+        WINDOW.blit(score_label, (20, 170))
 
-
+        # Spawn in new enemies
+        if ship.enemy_counter < 5:
+            enemies.append(Enemy(int(log(ship.score+10))))
+            ship.enemy_counter = ship.enemy_counter + 1
 
         #Draw and handle logic for all enemies
         for enemy in enemies:
             
             #Remove enemy with 0 or less HP
             if enemy.life <= 0:
+                if enemy.type > 0:
+                    ship.life = min(ship.life+1, 10)
+                    ship.score = ship.score + 10*enemy.type
+                    ship.enemiesHit = ship.enemiesHit + 1
+                    ship.enemy_counter = ship.enemy_counter - 1
+
                 explosion_Sound = mixer.Sound(os.path.join("assets", "explosion.wav"))
                 explosion_Sound.play()
                 enemies.remove(enemy)
+                
 
             #Collision check with player
             #distance between center of enemy and player is less than combined radius.
@@ -119,9 +128,13 @@ def main():
 
             #Handle enemy shooting bullets.
             if enemy.type > 0 and enemy.bulletCooldown <=0:
+                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 3*enemy.type, enemy.rotation))
+                enemy.bulletCooldown = int(400/enemy.type)
+
 
                 enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 10, enemy.rotation, 0))
-                enemy.bulletCooldown = int(100/enemy.type)
+                enemy.bulletCooldown = int(300/enemy.type)
+
             #Player bullet collision check here
             for bullet in bulletlist:
                 if sqrt(pow(enemy.x-bullet.x,2) + pow(enemy.y-bullet.y,2)) <= enemy.radius:
@@ -145,7 +158,7 @@ def main():
             else:
                 bulletlist.remove(i)
         for j in enemyBullets:
-            if abs(j.x-ship.x) < 3000 and abs(j.y-ship.y) < 3000:
+            if abs(j.x-WIDTH/2) < WIDTH/2 and abs(j.y-HEIGHT/2) < HEIGHT/2:
                 j.draw(WINDOW)
             else:
                 enemyBullets.remove(j)
@@ -165,7 +178,7 @@ def main():
         redraw_window()
 
         if ship.life <= 0:
-            GAMEOVER(numBullets, num_Kills, amount_Time, ship.enemiesHit)  
+            GAMEOVER(numBullets, ship.score, amount_Time, ship.enemiesHit)  
 
         
         for event in pygame.event.get():
@@ -426,7 +439,7 @@ def home():
             
     pygame.quit()
 
-def GAMEOVER(bullets, kills, time, collisions):
+def GAMEOVER(bullets, score, time, collisions):
     GAMEOVER_font = pygame.font.SysFont("righteous", 200)
     medium_font = pygame.font.SysFont("righteous", 75)
     smaller_font = pygame.font.SysFont("righteous", 25)
@@ -449,7 +462,7 @@ def GAMEOVER(bullets, kills, time, collisions):
         bullets_text = smaller_font.render("AMOUNT OF BULLETS: " + str(bullets), 1, (255, 255, 255))
         WINDOW.blit(bullets_text, (int(WIDTH/2 - bullets_text.get_width()/2), 450))
 
-        kills_text = smaller_font.render("AMOUNT OF KILLS: " + str(kills), 1, (255, 255, 255))
+        kills_text = smaller_font.render("TOTAL SCORE: " + str(score), 1, (255, 255, 255))
         WINDOW.blit(kills_text, (int(WIDTH/2 - kills_text.get_width()/2), 485))
         
         time_text = smaller_font.render("TIME SURVIVED: " + str(time/1000) + "s", 1, (255, 255, 255))
