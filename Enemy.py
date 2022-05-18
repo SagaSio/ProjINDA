@@ -33,7 +33,7 @@ class Enemy:
         #Spawns a ship. Higher type number creates a stronger enemy    
         else:
             self.life = 5*enemy_type
-            self.velocity = enemy_type
+            self.velocity = max(1, 0.6*enemy_type)
             self.radius = 30
             #Add sprite
             self.sprite = pygame.image.load(os.path.join("assets", "EnemyShip.png"))

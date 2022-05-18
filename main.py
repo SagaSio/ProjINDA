@@ -23,8 +23,8 @@ def main():
 
     run = True
 
-    mixer.music.load(os.path.join("assets", "backgroundMusic.mp3"))
-    mixer.music.play(-1)
+    #mixer.music.load(os.path.join("assets", "backgroundMusic.mp3"))
+    #mixer.music.play(-1)
 
     # Constants
     dAngle = 1/math.sqrt(2)
@@ -84,8 +84,10 @@ def main():
 
         # Spawn in new enemies
         if ship.enemy_counter < 5:
-            enemies.append(Enemy(int(log(ship.score+10))))
             ship.enemy_counter = ship.enemy_counter + 1
+            enemies.append(Enemy(int(log(ship.score+4))))
+            print(ship.enemy_counter)
+            
 
         #Draw and handle logic for all enemies
         for enemy in enemies:
@@ -97,10 +99,11 @@ def main():
                     ship.score = ship.score + 10*enemy.type
                     ship.enemiesHit = ship.enemiesHit + 1
                     ship.enemy_counter = ship.enemy_counter - 1
-
-                explosion_Sound = mixer.Sound(os.path.join("assets", "explosion.wav"))
-                explosion_Sound.play()
                 enemies.remove(enemy)
+
+                #explosion_Sound = mixer.Sound(os.path.join("assets", "explosion.wav"))
+                #explosion_Sound.play()
+                
                 
 
             #Collision check with player
@@ -126,7 +129,7 @@ def main():
 
             #Handle enemy shooting bullets.
             if enemy.type > 0 and enemy.bulletCooldown <=0:
-                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 3*enemy.type, enemy.rotation, 1))
+                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 1.25*enemy.type, enemy.rotation, 1))
                 enemy.bulletCooldown = int(300/enemy.type)
 
             #Player bullet collision check here
@@ -373,8 +376,8 @@ def main():
 
         # Shoots bullets
         if  keys[pygame.K_SPACE]:
-            warp_Sound = mixer.Sound(os.path.join("assets", "warp.wav"))
-            warp_Sound.play()
+            #warp_Sound = mixer.Sound(os.path.join("assets", "warp.wav"))
+            #warp_Sound.play()
             direction = ship.rotation
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
@@ -433,15 +436,15 @@ def home():
             
     pygame.quit()
 
-def GAMEOVER(bullets, score, time, collisions):
+def GAMEOVER(bullets, score, time, kills):
     GAMEOVER_font = pygame.font.SysFont("righteous", 200)
     medium_font = pygame.font.SysFont("righteous", 75)
     smaller_font = pygame.font.SysFont("righteous", 25)
     smallest_font = pygame.font.SysFont("righteous", 20)
     run = True
-    mixer.music.stop()
-    gameOver_Sound = mixer.Sound(os.path.join("assets", "gameOver.wav"))
-    gameOver_Sound.play()
+    #mixer.music.stop()
+    #gameOver_Sound = mixer.Sound(os.path.join("assets", "gameOver.wav"))
+    #gameOver_Sound.play()
     
     while run:
 
@@ -462,7 +465,7 @@ def GAMEOVER(bullets, score, time, collisions):
         time_text = smaller_font.render("TIME SURVIVED: " + str(time/1000) + "s", 1, (255, 255, 255))
         WINDOW.blit(time_text, (int(WIDTH/2 - time_text.get_width()/2), 515))
 
-        collision_text = smaller_font.render("AMOUNT OF COLLISIONS: " + str(collisions), 1, (255, 255, 255))
+        collision_text = smaller_font.render("ENEMIES HIT: " + str(kills), 1, (255, 255, 255))
         WINDOW.blit(collision_text, (int(WIDTH/2 - collision_text.get_width()/2), 545))
 
         producer_text = smallest_font.render("PRODUCED AND DESIGNED BY ", 1, (255, 255, 255))
