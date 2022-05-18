@@ -15,9 +15,8 @@ class Ship:
         self.rotation = pi/2
         self.xv = 0
         self.yv = 0
-        
-        # The target health
         self.life = 10
+
         # Code for the healthbar
         self.lifeMax = 10
         self.healthbarLength = 400
@@ -29,8 +28,6 @@ class Ship:
         # Allows us to draw the ship. These will be defined as we create the individual ships
         self.ship_img = pygame.image.load(os.path.join("assets", "SpaceShip.png"))
         self.rotated_ship = self.ship_img
-     
-    # Adding methods
 
     def drawHealthbar(self, WINDOW):
         # the red
@@ -56,9 +53,11 @@ class Ship:
             self.yv = self.yv - acceleration
         else:
             self.yv = self.yv + acceleration
+
         #update x and y values by velocity
         self.x = int(round(self.x + self.xv))
         self.y = int(round(self.y + self.yv))
+        #Rotates image to match rotation value
         self.rotated_ship = pygame.transform.rotate(self.ship_img, int((-math.degrees(self.rotation)-90)%360))
         rect = self.rotated_ship.get_rect()
         WINDOW.blit(self.rotated_ship, (self.x-rect.width/2, self.y-rect.height/2))

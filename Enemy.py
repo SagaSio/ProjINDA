@@ -33,7 +33,7 @@ class Enemy:
         #Spawns a ship. Higher type number creates a stronger enemy    
         else:
             self.life = 5*enemy_type
-            self.velocity = enemy_type
+            self.velocity = max(1, 0.6*enemy_type)
             self.radius = 30
             #Add sprite
             self.sprite = pygame.image.load(os.path.join("assets", "EnemyShip.png"))
@@ -42,9 +42,6 @@ class Enemy:
         self.rotation = pi/2
         self.xv = self.velocity*cos(self.direction)
         self.yv = self.velocity*sin(self.direction)
-        
-     
-    # Adding methods
 
     # Drawing method. Draws on the surface "WINDOW"
     def draw(self, WINDOW, ship):
@@ -55,11 +52,12 @@ class Enemy:
             self.x = WIDTH/2 + randint(1000,1500)*cos(spawnangle)
             self.y = HEIGHT/2 + randint(500,1000)*sin(spawnangle)
             self.direction = 2*arctan(randx-self.x/randy-self.y + 0.000023)
-
+        #For asteroids
         if self.type < 1:
             self.x = self.x + self.xv
             self.y = self.y + self.yv
             WINDOW.blit(self.sprite, (int(round(self.x-self.radius/2)), int(round(self.y-self.radius/2))))
+        #For enemy ships
         else:
             self.rotated_ship = pygame.transform.rotate(self.sprite, int((-math.degrees(self.rotation)-90)%360))
             self.rotation = atan2(ship.y-self.y, ship.x-self.x)
