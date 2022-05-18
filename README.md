@@ -1,12 +1,24 @@
 # ProjINDA
-Space Invaders but better :)
 
-2-dimensionellt retrospel 
+Vi har skapat Space Invaders, en ny version av det klassiska spelet där spelaren framställs som ett blått rymdskepp. 
 
-Likt Space Invaders:
-Ska kunna röra sig i alla riktningar, med vilket skeppet vrids med i rörelsen. 
-Fiender från alla håll, både undvika och skjuta. 
-Senare features med "power-ups" som shields och liknande. 
+## Mål
 
+Målet med spelet är att överleva så länge som möjligt och samtidigt skjuta ner så många fiende-skepp som möjligt! Dessa framställs som röda skepp och skjuter därmed röd laser. Asteroider rör sig ständigt på skärmen, och det gäller att undvika kontakt med dessa för att inte förlora liv.
 
-## How to install
+## Kontroller
+
+Starta spel - Klick på skärmen
+
+Styra skeppet - WASD-tangenterna
+
+Skjuta - Mellanslag
+
+Lås rotation - O-tangenten
+
+Lås plats - P-tangenten
+
+## Kontakt
+
+Saga sagasi@kh.se
+Kalle kalander@kth.se
