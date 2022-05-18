@@ -1,10 +1,7 @@
-
-from dataclasses import dataclass
 from math import atan2, sin, pi, cos, log
 import math
 import pygame
 import os
-
 from Bullet import *
 from Ship import *
 from Enemy import *
@@ -20,9 +17,8 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "Background.png")), (WIDTH, HEIGHT))
 
 def main():
-
     run = True
-
+    #Background music
     mixer.music.load(os.path.join("assets", "backgroundMusic.mp3"))
     mixer.music.play(-1)
 
@@ -31,6 +27,7 @@ def main():
     FPS = 60 
     num_bullets = 0
     main_font = pygame.font.SysFont("righteous", 30)
+    amount_Time = 0
 
     # Player Settings
     maxv = 8
@@ -39,13 +36,10 @@ def main():
     lockTurn = False
     bulletvelocity = 20
 
-    # Other settings
-
     # List for all player bullets
     numBullets = 0
     bulletlist = list()
     enemyBullets = list()
-
     amount_Time = 0
 
     # Creating a ship at middle of the screen
@@ -64,7 +58,7 @@ def main():
     def redraw_window():
         WINDOW.blit(BG, (0,0))
 
-        # printing text
+        # Displays stats ingame.
         num_bullets_label = main_font.render(f"BULLETS: {num_bullets}", 1, (255, 255, 255))
         player_life = main_font.render(f"LIVES: {ship.life}", 1, (255, 255, 255))
         num_Kills_label = main_font.render(f"KILLS: {ship.enemiesHit}", 1, (255, 255, 255))
@@ -78,7 +72,7 @@ def main():
         WINDOW.blit(score_label, (20, 170))
 
         # Spawn in new enemies
-        if ship.enemy_counter < 5:
+        if ship.enemy_counter < max(5, 0.5*sqrt(ship.score)):
             enemies.append(Enemy(int(log(ship.score+10))))
             ship.enemy_counter = ship.enemy_counter + 1
 
@@ -116,12 +110,11 @@ def main():
 
                 ship.xv = -ship.xv*0.5
                 ship.yv = -ship.yv*0.5
-
                 ship.life = ship.life-1
 
             #Handle enemy shooting bullets.
             if enemy.type > 0 and enemy.bulletCooldown <=0:
-                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 3*enemy.type, enemy.rotation, 1))
+                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 1.25*enemy.type, enemy.rotation, 1))
                 enemy.bulletCooldown = int(300/enemy.type)
 
             #Player bullet collision check here
@@ -140,27 +133,28 @@ def main():
         # Calls the health bar method
         ship.drawHealthbar(WINDOW)
 
-        #Draw all bullets on screen
+        # Draw all bullets on screen
+        # Player bullets
         for i in bulletlist:
             if abs(i.x-ship.x) < 3000 and abs(i.y-ship.y) < 3000:
                 i.draw(WINDOW)
             else:
                 bulletlist.remove(i)
+        # Enemy bullets
         for j in enemyBullets:
+            # Boundary check
             if abs(j.x-WIDTH/2) < WIDTH/2 and abs(j.y-HEIGHT/2) < HEIGHT/2:
                 j.draw(WINDOW)
             else:
                 enemyBullets.remove(j)
-                
-        for k in enemyBullets:
-            if sqrt(pow(ship.x-k.x,2) + pow(ship.y-k.y,2)) <= ship.radius:
+            # Collision check with ship.        
+            if sqrt(pow(ship.x-j.x,2) + pow(ship.y-j.y,2)) <= ship.radius:
                 ship.life = ship.life - 1
-                enemyBullets.remove(k)
+                enemyBullets.remove(j)
 
         pygame.display.update()
 
-        #Draw other collidable objects in a loop here. Enemies, asteroids etc. 
-
+    #Main game loop
     while run:
         clock.tick(FPS)
         amount_Time = amount_Time + clock.get_time()
@@ -179,7 +173,7 @@ def main():
         keys = pygame.key.get_pressed()
 
         # List of available key presses:
-        #  WASD, 1, SPACE, RETURN
+        #  WASD, 1, SPACE, RETURN, O, P
         if keys[pygame.K_a] and not keys[pygame.K_w] or keys[pygame.K_a] and not keys[pygame.K_s]: #left exlusive
             # change in speed
             if ship.xv>-maxv:
@@ -428,7 +422,7 @@ def home():
             
     pygame.quit()
 
-def GAMEOVER(bullets, score, time, collisions):
+def GAMEOVER(bullets, score, time, kills):
     GAMEOVER_font = pygame.font.SysFont("righteous", 200)
     medium_font = pygame.font.SysFont("righteous", 75)
     smaller_font = pygame.font.SysFont("righteous", 25)
@@ -457,7 +451,7 @@ def GAMEOVER(bullets, score, time, collisions):
         time_text = smaller_font.render("TIME SURVIVED: " + str(time/1000) + "s", 1, (255, 255, 255))
         WINDOW.blit(time_text, (int(WIDTH/2 - time_text.get_width()/2), 515))
 
-        collision_text = smaller_font.render("AMOUNT OF COLLISIONS: " + str(collisions), 1, (255, 255, 255))
+        collision_text = smaller_font.render("ENEMIES KILLED: " + str(kills), 1, (255, 255, 255))
         WINDOW.blit(collision_text, (int(WIDTH/2 - collision_text.get_width()/2), 545))
 
         producer_text = smallest_font.render("PRODUCED AND DESIGNED BY ", 1, (255, 255, 255))
