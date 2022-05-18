@@ -15,7 +15,7 @@ class Bullet:
         self.xv = cos(self.direction)*self.v
         self.yv = sin(self.direction)*self.v
         self.rotation = 0
-
+        self.type = bullet_type
         # if-sats här gällande vilken bullet-typ
         if bullet_type < 0:
             self.bullet_img = pygame.image.load(os.path.join("assets", "ShipBullet.png"))
@@ -28,6 +28,9 @@ class Bullet:
         #Update x and y position of bullet with direction and velocity
         self.x = int(self.x + self.xv)
         self.y = int(self.y + self.yv)
-        pygame.draw.circle(WINDOW, (255, 255, 255), (self.x, self.y), 5, 2)
+        if self.type == 0:
+            pygame.draw.circle(WINDOW, (255, 255, 255), (self.x, self.y), 5, 2)
+        else:
+            pygame.draw.circle(WINDOW, (255, 0, 0), (self.x, self.y), 5, 2)
         
    
