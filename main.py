@@ -17,7 +17,7 @@ os.environ['SDL_VIDEO_CENTERED'] = '1'
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Background
-BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
+BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "Background.png")), (WIDTH, HEIGHT))
 
 def main():
 
@@ -73,12 +73,6 @@ def main():
         time_label = main_font.render(f"TIME: {amount_Time/1000}", 1, (255, 255, 255))
         score_label = main_font.render(f"SCORE: {ship.score}", 1, (255, 255, 255))
 
-        #WINDOW.blit(player_life, (20,50))
-        #WINDOW.blit(num_Kills_label, (20, 80))
-        #WINDOW.blit(time_label, (20, 110))
-        #WINDOW.blit(num_bullets_label, (20, 140))
-        #WINDOW.blit(collision_label, (20, 170))
-
         WINDOW.blit(num_bullets_label, (20,50))
         WINDOW.blit(player_life, (20, 80))
         WINDOW.blit(num_Kills_label, (20, 110))
@@ -89,6 +83,7 @@ def main():
         if ship.enemy_counter < 5:
             enemies.append(Enemy(int(log(ship.score+10))))
             ship.enemy_counter = ship.enemy_counter + 1
+
         #Draw and handle logic for all enemies
         for enemy in enemies:
             
@@ -128,11 +123,15 @@ def main():
                 enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 3*enemy.type, enemy.rotation))
                 enemy.bulletCooldown = int(400/enemy.type)
 
+
+                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 10, enemy.rotation, 0))
+                enemy.bulletCooldown = int(300/enemy.type)
+
             #Player bullet collision check here
             for bullet in bulletlist:
                 if sqrt(pow(enemy.x-bullet.x,2) + pow(enemy.y-bullet.y,2)) <= enemy.radius:
                     enemy.life = enemy.life - 2
-                    bulletlist.remove(bullet)
+                    bulletlist.remove(bullet) 
 
             #Draw each enemy
             enemy.draw(WINDOW,ship)
@@ -375,7 +374,7 @@ def main():
             direction = ship.rotation
             xb = ship.x + ship.radius*cos(direction)
             yb = ship.y + ship.radius*sin(direction)
-            bulletlist.append(Bullet(xb, yb, bulletvelocity, direction))
+            bulletlist.append(Bullet(xb, yb, bulletvelocity, direction, 1))
             numBullets = numBullets + 1
             num_bullets += 1
             print("Active bullets:" + str(len(bulletlist)))
@@ -434,6 +433,7 @@ def GAMEOVER(bullets, score, time, collisions):
     GAMEOVER_font = pygame.font.SysFont("righteous", 200)
     medium_font = pygame.font.SysFont("righteous", 75)
     smaller_font = pygame.font.SysFont("righteous", 25)
+    smallest_font = pygame.font.SysFont("righteous", 20)
     run = True
     while run:
         WINDOW.blit(BG, (0,0))
@@ -441,7 +441,7 @@ def GAMEOVER(bullets, score, time, collisions):
         WINDOW.blit(GAMEOVER_text, (int(WIDTH/2 - GAMEOVER_text.get_width()/2), 100))
 
         retry_text = medium_font.render("PRESS THE MOUSEBUTTON TO RESTART", 1, (255, 255, 255))
-        WINDOW.blit(retry_text, (int(WIDTH/2 - retry_text.get_width()/2), 350))
+        WINDOW.blit(retry_text, (int(WIDTH/2 - retry_text.get_width()/2), 320))
 
         bullets_text = smaller_font.render("AMOUNT OF BULLETS: " + str(bullets), 1, (255, 255, 255))
         WINDOW.blit(bullets_text, (int(WIDTH/2 - bullets_text.get_width()/2), 450))
@@ -449,11 +449,20 @@ def GAMEOVER(bullets, score, time, collisions):
         kills_text = smaller_font.render("TOTAL SCORE: " + str(score), 1, (255, 255, 255))
         WINDOW.blit(kills_text, (int(WIDTH/2 - kills_text.get_width()/2), 485))
         
-        time_text = smaller_font.render("TIME SURVIVED: " + str(time), 1, (255, 255, 255))
+        time_text = smaller_font.render("TIME SURVIVED: " + str(time/1000) + "s", 1, (255, 255, 255))
         WINDOW.blit(time_text, (int(WIDTH/2 - time_text.get_width()/2), 515))
 
         collision_text = smaller_font.render("AMOUNT OF COLLISIONS: " + str(collisions), 1, (255, 255, 255))
         WINDOW.blit(collision_text, (int(WIDTH/2 - collision_text.get_width()/2), 545))
+
+        producer_text = smallest_font.render("PRODUCED AND DESIGNED BY ", 1, (255, 255, 255))
+        WINDOW.blit(producer_text, (int(WIDTH/2 - producer_text.get_width()/2), 610))
+
+        producer_text2 = smallest_font.render("KALLE ANDERSSON & SAGA SIÖSTEEN", 1, (255, 255, 255))
+        WINDOW.blit(producer_text2, (int(WIDTH/2 - producer_text2.get_width()/2), 625))
+
+        producer_text3 = smallest_font.render("ALL RIGHTS RESERVED", 1, (255, 255, 255))
+        WINDOW.blit(producer_text3, (int(WIDTH/2 - producer_text3.get_width()/2), 640))
 
         pygame.display.update()
 

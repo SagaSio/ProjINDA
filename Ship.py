@@ -17,7 +17,7 @@ class Ship:
         self.yv = 0
         
         # The target health
-        self.life = 10
+        self.life = 1
         # Code for the healthbar
         self.lifeMax = 10
         self.healthbarLength = 400
