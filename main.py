@@ -39,7 +39,8 @@ def main():
     # List for all player bullets
     numBullets = 0
     bulletlist = list()
-    enemyBullets = list()  
+    enemyBullets = list()
+    amount_Time = 0
 
     # Creating a ship at middle of the screen
     ship = Ship(WIDTH/2, HEIGHT/2)
