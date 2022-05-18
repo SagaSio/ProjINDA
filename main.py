@@ -1,12 +1,10 @@
 
 from dataclasses import dataclass
 from math import atan2, sin, pi, cos, log
-from numpy import arccos
 import math
 import pygame
 import os
-import time
-import random
+
 from Bullet import *
 from Ship import *
 from Enemy import *
@@ -120,10 +118,6 @@ def main():
 
             #Handle enemy shooting bullets.
             if enemy.type > 0 and enemy.bulletCooldown <=0:
-                enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 3*enemy.type, enemy.rotation))
-                enemy.bulletCooldown = int(400/enemy.type)
-
-
                 enemyBullets.append(Bullet(enemy.x + enemy.radius*cos(enemy.rotation), enemy.y + enemy.radius*sin(enemy.rotation), 10, enemy.rotation, 0))
                 enemy.bulletCooldown = int(300/enemy.type)
 
