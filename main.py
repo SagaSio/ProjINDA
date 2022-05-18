@@ -437,7 +437,7 @@ def GAMEOVER(bullets, kills, time, collisions):
         kills_text = smaller_font.render("AMOUNT OF KILLS: " + str(kills), 1, (255, 255, 255))
         WINDOW.blit(kills_text, (int(WIDTH/2 - kills_text.get_width()/2), 485))
         
-        time_text = smaller_font.render("TIME SURVIVED: " + str(time), 1, (255, 255, 255))
+        time_text = smaller_font.render("TIME SURVIVED: " + str(time/1000) + "s", 1, (255, 255, 255))
         WINDOW.blit(time_text, (int(WIDTH/2 - time_text.get_width()/2), 515))
 
         collision_text = smaller_font.render("AMOUNT OF COLLISIONS: " + str(collisions), 1, (255, 255, 255))
